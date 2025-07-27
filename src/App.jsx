@@ -1,4 +1,63 @@
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
 const App = () => {
+  useGSAP(() => {
+    gsap.from("#main-logo", {
+      xPercent: 200,
+      duration: 0.8,
+      scrub: true,
+      ease: "power1.out",
+    });
+
+    gsap.from("#main-product", {
+      yPercent: -200,
+      duration: "0.9",
+      scrub: true,
+      ease: "power1.out",
+    });
+
+    gsap.from("#title", {
+      yPercent: 30,
+      opacity: 0,
+      duration: "1",
+      scrub: true,
+      ease: "power1.out",
+    });
+    gsap.from(
+      "#name",
+      {
+        yPercent: 70,
+        opacity: 0,
+        duration: "1",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.8"
+    );
+    gsap.from(
+      "#description",
+      {
+        yPercent: 30,
+        opacity: 0,
+        duration: "1",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.8"
+    );
+    gsap.from(
+      "#order-btn",
+      {
+        yPercent: 50,
+        opacity: 0,
+        duration: "1",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "<"
+    );
+  });
   return (
     <div className="h-full md:min-h-[100dvh] w-full flex flex-col items-center relative overflow-hidden">
       <div className="flex-between w-full z-10 px-10 md:px-20 pt-5">
@@ -28,32 +87,41 @@ const App = () => {
       <div className="absolute inset-0 caramel-background" />
       <div className="relative flex items-center justify-center mt-5">
         <img
+          id="main-product"
           src="/images/caramel.png"
           alt="caramel"
           className="w-[42vw] md:w-[28vw] z-10"
         />
         <div className="absolute top-1/2 left-1/2 -translate-1/2 w-[60vw] md:w-[65vw]">
-          <img src="/images/logo.svg" alt="logo" className="w-full" />
+          <img
+            id="main-logo"
+            src="/images/logo.svg"
+            alt="logo"
+            className="w-full"
+          />
         </div>
       </div>
       <div className="md:absolute md:bottom-12 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
         <div className="flex flex-col items-start justify-between gap-5">
-          <span className="text-5xl">
+          <span id="title" className="text-5xl">
             Caramel
             <br className="hidden md:block" /> Crave
           </span>
-          <div className="flex-between font-light gap-5">
+          <div id="name" className="flex-between font-light gap-5">
             <span>Guava Favour</span>
             <span>$79.50</span>
             <span className="line-through">$89.50</span>
           </div>
-          <p className="font-light">
+          <p id="description" className="font-light">
             Experience the perfect blend of fresh, juicy <br />
             oranges in every sip! Our orange smoothie is <br />
             packed with natural vitamins, a burst of citrus <br />
             flavor, and no added preservatives.
           </p>
-          <div className="flex-center bg-white text-black text-sm w-[70%] h-12 rounded-3xl cursor-pointer">
+          <div
+            id="order-btn"
+            className="flex-center bg-white text-black text-sm w-[70%] h-12 rounded-3xl cursor-pointer"
+          >
             Add to cart
           </div>
         </div>
