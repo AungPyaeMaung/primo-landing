@@ -25,7 +25,7 @@ const App = () => {
       ease: "power1.out",
     });
     gsap.from(
-      "#name",
+      "#basic-info",
       {
         yPercent: 70,
         opacity: 0,
@@ -56,6 +56,42 @@ const App = () => {
         ease: "power1.out",
       },
       "<"
+    );
+
+    gsap.from(
+      "#name",
+      {
+        yPercent: 50,
+        opacity: 0,
+        duration: "0.5",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.9"
+    );
+
+    gsap.from(
+      "#new-price",
+      {
+        yPercent: 50,
+        opacity: 0,
+        duration: "0.5",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.8"
+    );
+
+    gsap.from(
+      "#old-price",
+      {
+        yPercent: 50,
+        opacity: 0,
+        duration: "0.5",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.7"
     );
   });
   return (
@@ -107,10 +143,12 @@ const App = () => {
             Caramel
             <br className="hidden md:block" /> Crave
           </span>
-          <div id="name" className="flex-between font-light gap-5">
-            <span>Guava Favour</span>
-            <span>$79.50</span>
-            <span className="line-through">$89.50</span>
+          <div id="basic-info" className="flex-between font-light gap-5">
+            <span id="name">Guava Favour</span>
+            <span id="new-price">$79.50</span>
+            <span id="old-price" className="line-through">
+              $89.50
+            </span>
           </div>
           <p id="description" className="font-light">
             Experience the perfect blend of fresh, juicy <br />
