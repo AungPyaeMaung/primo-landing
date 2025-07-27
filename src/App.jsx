@@ -1,6 +1,6 @@
 const App = () => {
   return (
-    <div className="min-h-[100dvh] w-full flex flex-col items-center relative overflow-hidden">
+    <div className="h-full md:min-h-[100dvh] w-full flex flex-col items-center relative overflow-hidden">
       <div className="flex-between w-full z-10 px-10 md:px-20 pt-5">
         <img
           src="/images/logo.svg"
@@ -36,12 +36,11 @@ const App = () => {
           <img src="/images/logo.svg" alt="logo" className="w-full" />
         </div>
       </div>
-      <div className="absolute bottom-12 flex justify-between w-full z-10 px-10 md:px-20 text-white">
+      <div className="md:absolute md:bottom-12 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
         <div className="flex flex-col items-start justify-between gap-5">
           <span className="text-5xl">
             Caramel
-            <br />
-            Crave
+            <br className="hidden md:block" /> Crave
           </span>
           <div className="flex-between font-light gap-5">
             <span>Guava Favour</span>
@@ -58,9 +57,11 @@ const App = () => {
             Add to cart
           </div>
         </div>
-        <span className="font-semibold text-4xl self-end">$79.50</span>
-        <div className="flex flex-col justify-between items-end gap-2 mt-24">
-          <div className="flex flex-col items-end gap-5">
+        <span className="font-semibold text-4xl self-center md:self-end">
+          $79.50
+        </span>
+        <div className="flex flex-col justify-between items-center md:items-end gap-2 md:mt-24">
+          <div className="flex flex-col items-center md:items-end gap-5">
             <div className="flex-between gap-3">
               <div className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border">
                 <img src="/images/arrowleft.svg" className="w-7 h-7" />
