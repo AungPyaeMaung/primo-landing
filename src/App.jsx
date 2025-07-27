@@ -1,6 +1,6 @@
 const App = () => {
   return (
-    <div className="h-[100dvh] w-full flex flex-col items-center relative overflow-hidden">
+    <div className="min-h-[100dvh] w-full flex flex-col items-center relative overflow-hidden">
       <div className="flex-between w-full z-10 px-10 md:px-20 pt-5">
         <img
           src="/images/logo.svg"
@@ -36,7 +36,7 @@ const App = () => {
           <img src="/images/logo.svg" alt="logo" className="w-full" />
         </div>
       </div>
-      <div className="flex justify-between w-full z-10 px-10 md:px-20 -mt-60 text-white">
+      <div className="absolute bottom-12 flex justify-between w-full z-10 px-10 md:px-20 text-white">
         <div className="flex flex-col items-start justify-between gap-5">
           <span className="text-5xl">
             Caramel
@@ -59,6 +59,37 @@ const App = () => {
           </div>
         </div>
         <span className="font-semibold text-4xl self-end">$79.50</span>
+        <div className="flex flex-col justify-between items-end gap-2 mt-24">
+          <div className="flex flex-col items-end gap-5">
+            <div className="flex-between gap-3">
+              <div className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border">
+                <img src="/images/arrowleft.svg" className="w-7 h-7" />
+              </div>
+              <div className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border rotate-180">
+                <img src="/images/arrowleft.svg" className="w-7 h-7" />
+              </div>
+            </div>
+            <div className="flex-between gap-2">
+              <img
+                src="/images/caramel-sample-1.svg"
+                className="w-20 h-20 rounded-2xl"
+              />
+              <img
+                src="/images/caramel-sample-2.svg"
+                className="w-20 h-20 rounded-2xl"
+              />
+            </div>
+          </div>
+          <div id="counter" className="flex-between gap-5">
+            <div className="flex-center text-sm p-3 rounded-xl cursor-pointer border-white border">
+              <img src="/images/minus.svg" className="w-3 h-3" />
+            </div>
+            <span className="font-semibold text-4xl">2</span>
+            <div className="flex-center text-sm p-3 rounded-xl cursor-pointer border-white border">
+              <img src="/images/plus.svg" className="w-3 h-3" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
