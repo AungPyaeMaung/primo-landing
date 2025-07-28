@@ -35,6 +35,13 @@ const App = () => {
       },
       "-=0.8"
     );
+    gsap.from("#price", {
+      yPercent: 50,
+      opacity: 0,
+      duration: "1",
+      scrub: true,
+      ease: "power1.out",
+    });
     gsap.from(
       "#description",
       {
@@ -84,6 +91,62 @@ const App = () => {
 
     gsap.from(
       "#old-price",
+      {
+        yPercent: 50,
+        opacity: 0,
+        duration: "0.5",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.7"
+    );
+    gsap.from(
+      "#arrowleft",
+      {
+        yPercent: 20,
+        opacity: 0,
+        duration: "0.5",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.9"
+    );
+    gsap.from(
+      "#arrowright",
+      {
+        yPercent: 20,
+        opacity: 0,
+        duration: "0.5",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.7"
+    );
+    gsap.from(
+      "#sample-1",
+      {
+        yPercent: 20,
+        opacity: 0,
+        duration: "0.3",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.8"
+    );
+    gsap.from(
+      "#sample-2",
+      {
+        yPercent: 20,
+        opacity: 0,
+        duration: "0.3",
+        scrub: true,
+        ease: "power1.out",
+      },
+      "-=0.7"
+    );
+
+    gsap.from(
+      "#counter",
       {
         yPercent: 50,
         opacity: 0,
@@ -163,25 +226,36 @@ const App = () => {
             Add to cart
           </div>
         </div>
-        <span className="font-semibold text-4xl self-center md:self-end">
+        <span
+          id="price"
+          className="font-semibold text-4xl self-center md:mr-30 md:self-end"
+        >
           $79.50
         </span>
-        <div className="flex flex-col justify-between items-center md:items-end gap-2 md:mt-24">
-          <div className="flex flex-col items-center md:items-end gap-5">
+        <div className="flex flex-col justify-between items-center md:self-end gap-2">
+          <div className="flex flex-col items-center md:items-end gap-5 mb-10">
             <div className="flex-between gap-3">
-              <div className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border">
+              <div
+                id="arrowleft"
+                className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border"
+              >
                 <img src="/images/arrowleft.svg" className="w-7 h-7" />
               </div>
-              <div className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border rotate-180">
+              <div
+                id="arrowright"
+                className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border rotate-180"
+              >
                 <img src="/images/arrowleft.svg" className="w-7 h-7" />
               </div>
             </div>
             <div className="flex-between gap-2">
               <img
+                id="sample-1"
                 src="/images/caramel-sample-1.svg"
                 className="w-20 h-20 rounded-2xl"
               />
               <img
+                id="sample-2"
                 src="/images/caramel-sample-2.svg"
                 className="w-20 h-20 rounded-2xl"
               />
