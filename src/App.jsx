@@ -1,8 +1,16 @@
+"use client";
+
+import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+
 import { productList } from "../constants";
 
 const App = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const currentImageRef = useRef(null);
+
   useGSAP(() => {
     gsap.from("#main-logo", {
       xPercent: 200,
@@ -157,7 +165,10 @@ const App = () => {
       },
       "-=0.7"
     );
-  });
+  }, []);
+
+  const totalProducts = productList.length;
+
   return (
     <div className="h-full md:min-h-[100dvh] w-full flex flex-col items-center relative overflow-hidden">
       <div className="flex-between w-full z-10 px-10 md:px-20 pt-5">
@@ -205,11 +216,11 @@ const App = () => {
           </div>
           <div className="md:absolute md:bottom-12 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
             <div className="flex flex-col items-start justify-between gap-5 w-full md:w-xs text-wrap">
-              <span id="title" className="text-5xl">
-                {product.name}
-              </span>
+              <div id="title" className="md:w-[5px] self-center md:self-start">
+                <span className="text-5xl">{product.name}</span>
+              </div>
               <div id="basic-info" className="flex-between font-light gap-5">
-                <span id="name">Guava Favour</span>
+                <span id="name">{product.flavour}</span>
                 <span id="new-price" className="!text-milk-yellow">
                   {product.newPrice}
                 </span>
@@ -236,18 +247,20 @@ const App = () => {
             <div className="flex flex-col justify-between items-center md:self-end gap-2">
               <div className="flex flex-col items-center md:items-end gap-5 mb-10">
                 <div className="flex-between gap-3">
-                  <div
+                  <button
+                    onClick={() => {}}
                     id="arrowleft"
                     className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border"
                   >
                     <img src="/images/arrowleft.svg" className="w-7 h-7" />
-                  </div>
-                  <div
+                  </button>
+                  <button
+                    onClick={() => {}}
                     id="arrowright"
                     className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border rotate-180"
                   >
                     <img src="/images/arrowleft.svg" className="w-7 h-7" />
-                  </div>
+                  </button>
                 </div>
                 <div className="flex-between gap-2">
                   <img
