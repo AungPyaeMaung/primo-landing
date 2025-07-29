@@ -32,6 +32,39 @@ const productList = [
     firstSampleImgPath: "/images/caramel-sample-1.svg",
     secondSampleImgPath: "/images/caramel-sample-2.svg",
   },
+  {
+    name: "Mango Mania",
+    oldPrice: "$88.00",
+    newPrice: "$78.00",
+    flavour: "Tropical Mango",
+    description:
+      "Bursting with the juicy sweetness of ripe mangoes, this vibrant drink brings tropical sunshine to every sip — creamy, smooth, and irresistibly fruity.",
+    image: "/images/mango.png",
+    firstSampleImgPath: "/images/caramel-sample-1.svg",
+    secondSampleImgPath: "/images/caramel-sample-2.svg",
+  },
+  {
+    name: "Berry Bliss",
+    oldPrice: "$91.00",
+    newPrice: "$81.00",
+    flavour: "Mixed Berries",
+    description:
+      "A rich blend of strawberries, blueberries, and raspberries, this creamy drink offers a perfect balance of sweet and tangy in every delicious drop.",
+    image: "/images/berry.png",
+    firstSampleImgPath: "/images/caramel-sample-1.svg",
+    secondSampleImgPath: "/images/caramel-sample-2.svg",
+  },
+  {
+    name: "Banana Burst",
+    oldPrice: "$86.00",
+    newPrice: "$76.00",
+    flavour: "Creamy Banana",
+    description:
+      "Smooth, mellow, and packed with banana goodness, this classic flavour brings a nostalgic, comforting taste that's perfect any time of day.",
+    mainImgPath: "/images/banana.png",
+    firstSampleImgPath: "/images/caramel-sample-1.svg",
+    secondSampleImgPath: "/images/caramel-sample-2.svg",
+  },
 ];
 
 export { productList };

@@ -319,7 +319,7 @@ const App = () => {
         />
       </div>
       <div className="md:absolute md:bottom-20 flex flex-col-reverse mb-5 justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
-        <div className="flex flex-col items-start justify-between gap-5 w-full md:w-xs text-wrap">
+        <div className="flex flex-col items-center md:items-start justify-between gap-5 w-full md:w-xs text-wrap">
           <div id="title" className="md:w-[5px] self-center md:self-start">
             <span className="text-5xl">{currentProduct.name}</span>
           </div>
@@ -348,7 +348,7 @@ const App = () => {
         >
           {currentProduct.newPrice}
         </span>
-        <div className="flex flex-col justify-between items-center md:self-end mt-10 gap-2">
+        <div className="flex flex-col justify-between items-center md:self-end gap-2">
           <div className="flex flex-col items-center md:items-end gap-5 mb-10">
             <div className="flex-between gap-3">
               <button
