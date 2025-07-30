@@ -13,11 +13,11 @@ const App = () => {
   const backgroundRef = useRef(null);
 
   useGSAP(() => {
-    gsap.from("#main-logo", {
-      xPercent: 200,
-      duration: 0.8,
-      ease: "power1.out",
-    });
+    // gsap.from("#main-logo", {
+    //   xPercent: 200,
+    //   duration: 0.8,
+    //   ease: "power1.out",
+    // });
 
     // Initial image animation (from left)
     if (currentImageRef.current) {
@@ -395,7 +395,11 @@ const App = () => {
                 id="arrowleft"
                 className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border"
               >
-                <img src="/images/arrowleft.svg" className="w-7 h-7" />
+                <img
+                  alt="arrowleft"
+                  src="/images/arrowleft.svg"
+                  className="w-7 h-7"
+                />
               </div>
               <div
                 onClick={goToNext}
@@ -404,7 +408,7 @@ const App = () => {
                 className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border rotate-180"
               >
                 <img
-                  alt="arrowleft"
+                  alt="arrowright"
                   src="/images/arrowleft.svg"
                   className="w-7 h-7"
                 />
