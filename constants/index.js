@@ -44,8 +44,8 @@ const productList = [
     description:
       "Bursting with the juicy sweetness of ripe mangoes, this vibrant drink brings tropical sunshine to every sip — creamy, smooth, and irresistibly fruity.",
     image: "/images/mango.webp",
-    firstSampleImgPath: "/images/caramel-sample-1.webp",
-    secondSampleImgPath: "/images/caramel-sample-2.webp",
+    firstSampleImgPath: "/images/mango-sample-1.webp",
+    secondSampleImgPath: "/images/mango-sample-2.webp",
   },
   {
     name: "Berry Bliss",
