@@ -20,8 +20,8 @@ const productList = [
     description:
       "Indulge in the rich aroma and smooth taste of our creamy coffee blend. Crafted with premium beans and a touch of sweetness, it's your perfect companion for any time of day.",
     image: "/images/chocolate.png",
-    firstSampleImgPath: "/images/caramel-sample-1.svg",
-    secondSampleImgPath: "/images/caramel-sample-2.svg",
+    firstSampleImgPath: "/images/chocolate-sample-1.svg",
+    secondSampleImgPath: "/images/chocolate-sample-2.svg",
   },
   {
     name: "Sublime Lime",
@@ -32,12 +32,12 @@ const productList = [
     description:
       "Refresh your senses with the zesty zing of lime! This smoothie delivers a tangy twist that’s both invigorating and packed with natural antioxidants and vitamin C.",
     image: "/images/lime.png",
-    firstSampleImgPath: "/images/caramel-sample-1.svg",
-    secondSampleImgPath: "/images/caramel-sample-2.svg",
+    firstSampleImgPath: "/images/lime-sample-1.svg",
+    secondSampleImgPath: "/images/lime-sample-2.svg",
   },
   {
     name: "Mango Mania",
-    bgColor: "caramel-background",
+    bgColor: "mango-background",
     oldPrice: "$88.00",
     newPrice: "$78.00",
     flavour: "Tropical Mango",
@@ -49,27 +49,27 @@ const productList = [
   },
   {
     name: "Berry Bliss",
-    bgColor: "caramel-background",
+    bgColor: "berry-background",
     oldPrice: "$91.00",
     newPrice: "$81.00",
     flavour: "Mixed Berries",
     description:
       "A rich blend of strawberries, blueberries, and raspberries, this creamy drink offers a perfect balance of sweet and tangy in every delicious drop.",
     image: "/images/berry.png",
-    firstSampleImgPath: "/images/caramel-sample-1.svg",
-    secondSampleImgPath: "/images/caramel-sample-2.svg",
+    firstSampleImgPath: "/images/berry-sample-1.svg",
+    secondSampleImgPath: "/images/berry-sample-2.svg",
   },
   {
     name: "Banana Burst",
-    bgColor: "caramel-background",
+    bgColor: "banana-background",
     oldPrice: "$86.00",
     newPrice: "$76.00",
     flavour: "Creamy Banana",
     description:
       "Smooth, mellow, and packed with banana goodness, this classic flavour brings a nostalgic, comforting taste that's perfect any time of day.",
     image: "/images/banana.png",
-    firstSampleImgPath: "/images/caramel-sample-1.svg",
-    secondSampleImgPath: "/images/caramel-sample-2.svg",
+    firstSampleImgPath: "/images/banana-sample-1.svg",
+    secondSampleImgPath: "/images/banana-sample-2.svg",
   },
 ];
 

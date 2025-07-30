@@ -163,14 +163,39 @@ const App = () => {
 
   const totalProducts = productList.length;
 
-  // Helper function to get background gradient colors
+  // Helper function to convert Tailwind gradient classes to CSS gradients
   const getBackgroundGradient = (bgColorClass) => {
-    const gradients = {
-      "caramel-background": "radial-gradient(circle, #f97316, #8b4513)",
-      "chocolate-background": "radial-gradient(circle, #d2691e, #3c1810)",
-      // Add more gradients as needed for other products
+    // Map your CSS classes to actual gradient values
+    const gradientMap = {
+      "caramel-background": {
+        from: "#fb6436", // orange-300
+        to: "#b24726", // orange-600
+      },
+      "chocolate-background": {
+        from: "#AC6148", // amber-300
+        to: "#5c2814", // amber-800
+      },
+      "lime-background": {
+        from: "#bef264", // lime-300
+        to: "#365314", // lime-700
+      },
+      "mango-background": {
+        from: "#fcd34d", // amber-300
+        to: "#d97706", // amber-600
+      },
+      "berry-background": {
+        from: "#f9a8d4", // pink-300
+        to: "#be185d", // pink-700
+      },
+      "banana-background": {
+        from: "#fde047", // yellow-300
+        to: "#ca8a04", // yellow-600
+      },
     };
-    return gradients[bgColorClass] || gradients["caramel-background"];
+
+    const colors =
+      gradientMap[bgColorClass] || gradientMap["caramel-background"];
+    return `radial-gradient(circle, ${colors.from}, ${colors.to})`;
   };
 
   const animateImageTransition = (newIndex, direction) => {
@@ -324,12 +349,12 @@ const App = () => {
           src={currentProduct.image}
           alt={currentProduct.name}
         />
-        <img
+        {/* <img
           id="main-logo"
           src="/images/logo.svg"
           alt="logo"
           className="absolute left-1/2 -translate-x-1/2 size-[70vh] md:size-[75vw]"
-        />
+        /> */}
       </div>
       <div className="md:absolute md:bottom-20 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
         <div className="flex flex-col items-center md:items-start justify-between gap-5 w-full md:w-xs text-wrap">
@@ -364,31 +389,37 @@ const App = () => {
         <div className="flex flex-col justify-between items-center md:self-end gap-2">
           <div className="flex flex-col items-center md:items-end gap-5 mb-10">
             <div className="flex-between gap-3">
-              <button
+              <div
                 onClick={goToPrev}
                 disabled={isAnimating}
                 id="arrowleft"
                 className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border"
               >
                 <img src="/images/arrowleft.svg" className="w-7 h-7" />
-              </button>
-              <button
+              </div>
+              <div
                 onClick={goToNext}
                 disabled={isAnimating}
                 id="arrowright"
                 className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border rotate-180"
               >
-                <img src="/images/arrowleft.svg" className="w-7 h-7" />
-              </button>
+                <img
+                  alt="arrowleft"
+                  src="/images/arrowleft.svg"
+                  className="w-7 h-7"
+                />
+              </div>
             </div>
             <div className="flex-between gap-2">
               <img
                 id="sample-1"
+                alt="sample-1"
                 src={currentProduct.firstSampleImgPath}
                 className="w-20 h-20 rounded-2xl"
               />
               <img
                 id="sample-2"
+                alt="sample-2"
                 src={currentProduct.secondSampleImgPath}
                 className="w-20 h-20 rounded-2xl"
               />
@@ -396,11 +427,19 @@ const App = () => {
           </div>
           <div id="counter" className="flex-between gap-5">
             <div className="flex-center text-sm p-3 rounded-xl cursor-pointer border-white border">
-              <img src="/images/minus.svg" className="w-3 h-3" />
+              <img
+                alt="minus-button"
+                src="/images/minus.svg"
+                className="w-3 h-3"
+              />
             </div>
             <span className="font-semibold text-4xl">2</span>
             <div className="flex-center text-sm p-3 rounded-xl cursor-pointer border-white border">
-              <img src="/images/plus.svg" className="w-3 h-3" />
+              <img
+                alt="plus-button"
+                src="/images/plus.svg"
+                className="w-3 h-3"
+              />
             </div>
           </div>
         </div>
