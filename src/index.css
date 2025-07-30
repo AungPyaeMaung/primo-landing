@@ -12,6 +12,10 @@
   --color-white: #ffffff;
   --color-caramel-lite: #fb6436;
   --color-caramel-dark: #b24726;
+  --color-chocolate-light: #ac6148;
+  --color-chocolate-dark: #5c2814;
+  --color-lime-light: #84cc16;
+  --color-lime-dark: #365314;
   --color-dark-brown: #523122;
   --color-mid-brown: #a26833;
   --color-light-brown: #e3a458;
@@ -63,5 +67,12 @@ body::-webkit-scrollbar {
 
   .caramel-background {
     @apply bg-radial from-orange-500 to-caramel-dark;
+  }
+
+  .chocolate-background {
+    @apply bg-radial from-light-brown to-chocolate-dark;
+  }
+  .lime-background {
+    @apply bg-radial from-lime-light to-lime-dark;
   }
 }

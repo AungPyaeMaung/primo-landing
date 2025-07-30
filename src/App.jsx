@@ -10,12 +10,12 @@ const App = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const currentImageRef = useRef(null);
+  const backgroundRef = useRef(null);
 
   useGSAP(() => {
     gsap.from("#main-logo", {
       xPercent: 200,
       duration: 0.8,
-      scrub: true,
       ease: "power1.out",
     });
 
@@ -37,7 +37,6 @@ const App = () => {
       yPercent: 30,
       opacity: 0,
       duration: "1",
-      scrub: true,
       ease: "power1.out",
     });
     gsap.from(
@@ -46,7 +45,6 @@ const App = () => {
         yPercent: 70,
         opacity: 0,
         duration: "1",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.8"
@@ -55,7 +53,6 @@ const App = () => {
       yPercent: 50,
       opacity: 0,
       duration: "1",
-      scrub: true,
       ease: "power1.out",
     });
     gsap.from(
@@ -64,7 +61,6 @@ const App = () => {
         yPercent: 30,
         opacity: 0,
         duration: "1",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.8"
@@ -75,7 +71,6 @@ const App = () => {
         yPercent: 50,
         opacity: 0,
         duration: "1",
-        scrub: true,
         ease: "power1.out",
       },
       "<"
@@ -87,7 +82,6 @@ const App = () => {
         yPercent: 50,
         opacity: 0,
         duration: "0.5",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.9"
@@ -99,7 +93,6 @@ const App = () => {
         yPercent: 50,
         opacity: 0,
         duration: "0.5",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.8"
@@ -111,7 +104,6 @@ const App = () => {
         yPercent: 50,
         opacity: 0,
         duration: "0.5",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.7"
@@ -122,7 +114,6 @@ const App = () => {
         yPercent: 20,
         opacity: 0,
         duration: "0.5",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.9"
@@ -133,7 +124,6 @@ const App = () => {
         yPercent: 20,
         opacity: 0,
         duration: "0.5",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.7"
@@ -144,7 +134,6 @@ const App = () => {
         yPercent: 20,
         opacity: 0,
         duration: "0.3",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.8"
@@ -155,7 +144,6 @@ const App = () => {
         yPercent: 20,
         opacity: 0,
         duration: "0.3",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.7"
@@ -167,7 +155,6 @@ const App = () => {
         yPercent: 50,
         opacity: 0,
         duration: "0.5",
-        scrub: true,
         ease: "power1.out",
       },
       "-=0.7"
@@ -175,6 +162,16 @@ const App = () => {
   }, []);
 
   const totalProducts = productList.length;
+
+  // Helper function to get background gradient colors
+  const getBackgroundGradient = (bgColorClass) => {
+    const gradients = {
+      "caramel-background": "radial-gradient(circle, #f97316, #8b4513)",
+      "chocolate-background": "radial-gradient(circle, #d2691e, #3c1810)",
+      // Add more gradients as needed for other products
+    };
+    return gradients[bgColorClass] || gradients["caramel-background"];
+  };
 
   const animateImageTransition = (newIndex, direction) => {
     if (isAnimating) return;
@@ -203,6 +200,17 @@ const App = () => {
     gsap.set(newImage, {
       yPercent: incomingYPercent,
       opacity: 1,
+    });
+
+    // Enhanced background transition with smooth gradient blending
+    const bgEl = backgroundRef.current;
+    const nextGradient = getBackgroundGradient(productList[newIndex].bgColor);
+
+    // Create a smooth transition between gradients
+    gsap.to(bgEl, {
+      duration: 1.2,
+      background: nextGradient,
+      ease: "power2.inOut",
     });
 
     // Create timeline for simultaneous animations
@@ -240,7 +248,6 @@ const App = () => {
         yPercent: 0,
         opacity: 1,
         duration: 1,
-        scrub: true,
         ease: "power1.out",
       },
       0
@@ -273,8 +280,6 @@ const App = () => {
   };
 
   const currentProduct = getProductAt(0);
-  const nextProduct = getProductAt(1);
-  const prevProduct = getProductAt(-1);
 
   return (
     <div className="min-h-[100dvh] w-full flex flex-col items-center justify-start relative overflow-hidden">
@@ -301,8 +306,16 @@ const App = () => {
           </div>
         </div>
       </div>
-      {/* Main orange radial gradient background matching the image */}
-      <div className="absolute inset-0 caramel-background" />
+
+      {/* Enhanced background with smooth gradient transitions */}
+      <div
+        ref={backgroundRef}
+        className="absolute inset-0"
+        style={{
+          background: getBackgroundGradient(currentProduct.bgColor),
+          transition: "none", // GSAP handles the transition
+        }}
+      />
 
       <div id="brand" className="relative col-center mx-5 mt-10 md:-mt-10">
         <img
@@ -318,7 +331,7 @@ const App = () => {
           className="absolute left-1/2 -translate-x-1/2 size-[70vh] md:size-[75vw]"
         />
       </div>
-      <div className="md:absolute md:bottom-20 flex flex-col-reverse mb-5 justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
+      <div className="md:absolute md:bottom-20 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
         <div className="flex flex-col items-center md:items-start justify-between gap-5 w-full md:w-xs text-wrap">
           <div id="title" className="md:w-[5px] self-center md:self-start">
             <span className="text-5xl">{currentProduct.name}</span>
@@ -344,7 +357,7 @@ const App = () => {
         </div>
         <span
           id="price"
-          className="font-semibold text-4xl self-center md:mr-30 md:self-end"
+          className="font-semibold text-4xl self-center md:mr-32 md:self-end"
         >
           {currentProduct.newPrice}
         </span>

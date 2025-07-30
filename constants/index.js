@@ -1,6 +1,7 @@
 const productList = [
   {
     name: "Caramel Crave",
+    bgColor: "caramel-background",
     flavour: "Salted Caramel Flavour",
     oldPrice: "$89.50",
     newPrice: "$79.50",
@@ -12,6 +13,7 @@ const productList = [
   },
   {
     name: "Creamy Coffee",
+    bgColor: "chocolate-background",
     flavour: "Mocha Blend Flavour",
     oldPrice: "$94.00",
     newPrice: "$84.00",
@@ -23,6 +25,7 @@ const productList = [
   },
   {
     name: "Sublime Lime",
+    bgColor: "lime-background",
     flavour: "Zesty Lime Flavour",
     oldPrice: "$87.00",
     newPrice: "$77.00",
@@ -34,6 +37,7 @@ const productList = [
   },
   {
     name: "Mango Mania",
+    bgColor: "caramel-background",
     oldPrice: "$88.00",
     newPrice: "$78.00",
     flavour: "Tropical Mango",
@@ -45,6 +49,7 @@ const productList = [
   },
   {
     name: "Berry Bliss",
+    bgColor: "caramel-background",
     oldPrice: "$91.00",
     newPrice: "$81.00",
     flavour: "Mixed Berries",
@@ -56,12 +61,13 @@ const productList = [
   },
   {
     name: "Banana Burst",
+    bgColor: "caramel-background",
     oldPrice: "$86.00",
     newPrice: "$76.00",
     flavour: "Creamy Banana",
     description:
       "Smooth, mellow, and packed with banana goodness, this classic flavour brings a nostalgic, comforting taste that's perfect any time of day.",
-    mainImgPath: "/images/banana.png",
+    image: "/images/banana.png",
     firstSampleImgPath: "/images/caramel-sample-1.svg",
     secondSampleImgPath: "/images/caramel-sample-2.svg",
   },
