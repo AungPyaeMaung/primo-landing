@@ -65,7 +65,7 @@ body::-webkit-scrollbar {
     @apply 2xl:text-[8.5rem] md:text-8xl text-5xl font-bold uppercase leading-[9vw] tracking-[-.35vw];
   }
 
-  .caramel-background {
+  /* .caramel-background {
     @apply bg-radial from-orange-500 to-caramel-dark;
   }
 
@@ -74,5 +74,5 @@ body::-webkit-scrollbar {
   }
   .lime-background {
     @apply bg-radial from-lime-light to-lime-dark;
-  }
+  } */
 }
