@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+
+import Header from "./Header";
 import { bgColorMap, gradientMap, productList } from "../../constants";
 
 const HeroPage = () => {
@@ -380,53 +382,12 @@ const HeroPage = () => {
         />
       </Helmet>
       <div className="min-h-[100dvh] w-full flex flex-col items-center justify-start relative overflow-hidden">
-        <div className="flex-between w-full z-10 px-10 md:px-20 pt-5">
-          <div className="w-[15vw] md:w-[5vw] aspect-[3/2]">
-            {" "}
-            {/* Adjust ratio to match your logo */}
-            <img
-              src="/images/logo.svg"
-              alt="logo"
-              width="200"
-              height="50"
-              className="w-full h-full"
-            />
-          </div>
-          <div className="flex-center gap-2">
-            <div className="flex-center bg-white text-black text-sm w-24 h-10 rounded-3xl cursor-pointer">
-              Products
-            </div>
-            <div
-              ref={btnBackgroundRef1}
-              className="flex-center text-white text-sm w-24 h-10 rounded-3xl cursor-pointer"
-              style={{
-                background: getButtonBackground(currentProduct.bgColor),
-                transition: "none", // GSAP handles the transition
-              }}
-            >
-              Contact
-            </div>
-          </div>
-          <div className="flex-center gap-4">
-            <div
-              ref={btnBackgroundRef2}
-              className="flex-center text-sm p-3 rounded-full cursor-pointer"
-              style={{
-                background: getButtonBackground(currentProduct.bgColor),
-                transition: "none", // GSAP handles the transition
-              }}
-            >
-              <img
-                src="/images/profile.svg"
-                alt="profile"
-                className="w-5 h-5"
-              />
-            </div>
-            <div className="flex-center bg-white text-sm p-3 rounded-full cursor-pointer">
-              <img src="/images/remove.svg" alt="remove" className="w-5 h-5" />
-            </div>
-          </div>
-        </div>
+        <Header
+          currentProduct={currentProduct}
+          getButtonBackground={getButtonBackground}
+          btnBackgroundRef1={btnBackgroundRef1}
+          btnBackgroundRef2={btnBackgroundRef2}
+        />
 
         {/* Enhanced background with smooth gradient transitions */}
         <div
