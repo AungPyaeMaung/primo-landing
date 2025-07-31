@@ -12,7 +12,8 @@ const HeroPage = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const currentImageRef = useRef(null);
   const backgroundRef = useRef(null);
-  const btnBackgroundRef = useRef(null);
+  const btnBackgroundRef1 = useRef(null);
+  const btnBackgroundRef2 = useRef(null);
 
   useGSAP(() => {
     gsap.from("#main-logo", {
@@ -169,11 +170,67 @@ const HeroPage = () => {
     return bgColorMap[bgColorClass];
   };
 
-  // Helper function to convert Tailwind gradient classes to CSS gradients
-  const getBackgroundGradient = (bgColorClass) => {
+  // Enhanced gradient function with focused lighting around product
+  const getBackgroundGradient = (
+    bgColorClass,
+    gradientType = "product-halo"
+  ) => {
     const colors =
       gradientMap[bgColorClass] || gradientMap["caramel-background"];
-    return `radial-gradient(circle, ${colors.from}, ${colors.to})`;
+
+    switch (gradientType) {
+      case "product-focused":
+        // Tight spotlight around center product area
+        return `
+        radial-gradient(circle 700px at center, ${colors.from}80, transparent 60%),
+        radial-gradient(circle 1000px at center, ${colors.accent}40, transparent 70%),
+        ${colors.to}
+      `;
+
+      case "product-glow":
+        // Soft glow with very limited spread
+        return `
+        radial-gradient(circle 800px at 50% 45%, ${colors.from}90, transparent 20%),
+        radial-gradient(circle 1000px at 50% 45%, ${colors.accent}30, transparent 40%),
+        ${colors.to}
+      `;
+
+      case "spotlight":
+        // Dramatic spotlight effect
+        return `
+        radial-gradient(circle 1000px at center, ${colors.from}95, transparent 80%),
+        ${colors.to}
+      `;
+
+      case "ambient-light":
+        // Very subtle ambient lighting
+        return `
+        radial-gradient(circle 220px at 48% 42%, ${colors.from}60, transparent 90%),
+        radial-gradient(circle 120px at 52% 48%, ${colors.accent}40, transparent 100%),
+        ${colors.to}
+      `;
+
+      case "product-halo":
+        // Halo effect around product with minimal spread
+        return `
+        radial-gradient(circle 700px at center, ${colors.from}85, transparent 75%),
+        radial-gradient(circle 800px at center, ${colors.from}25, transparent 85%),
+        ${colors.to}
+      `;
+
+      case "radial":
+        return `radial-gradient(circle at 30% 20%, ${colors.from}, ${colors.to})`;
+
+      case "linear":
+        return `linear-gradient(135deg, ${colors.from}, ${colors.to})`;
+
+      default:
+        return `
+        radial-gradient(circle 200px at center, ${colors.from}80, transparent 60%),
+        radial-gradient(circle 300px at center, ${colors.accent}40, transparent 70%),
+        ${colors.to}
+      `;
+    }
   };
 
   const animateImageTransition = (newIndex, direction) => {
@@ -216,12 +273,19 @@ const HeroPage = () => {
       ease: "power2.inOut",
     });
 
-    const btnBgEl = btnBackgroundRef.current;
+    const btnBgEl1 = btnBackgroundRef1.current;
+    const btnBgEl2 = btnBackgroundRef2.current;
     const nextBackgroundColor = getButtonBackground(
       productList[newIndex].bgColor
     );
 
-    gsap.to(btnBgEl, {
+    gsap.to(btnBgEl1, {
+      duration: 1.2,
+      background: nextBackgroundColor,
+      ease: "power2.inOut",
+    });
+
+    gsap.to(btnBgEl2, {
       duration: 1.2,
       background: nextBackgroundColor,
       ease: "power2.inOut",
@@ -334,7 +398,7 @@ const HeroPage = () => {
               Products
             </div>
             <div
-              ref={btnBackgroundRef}
+              ref={btnBackgroundRef1}
               className="flex-center text-white text-sm w-24 h-10 rounded-3xl cursor-pointer"
               style={{
                 background: getButtonBackground(currentProduct.bgColor),
@@ -346,7 +410,7 @@ const HeroPage = () => {
           </div>
           <div className="flex-center gap-4">
             <div
-              ref={btnBackgroundRef}
+              ref={btnBackgroundRef2}
               className="flex-center text-sm p-3 rounded-full cursor-pointer"
               style={{
                 background: getButtonBackground(currentProduct.bgColor),

@@ -75,9 +75,9 @@ const productList = [
 
 // Map your CSS classes to actual gradient values
 const bgColorMap = {
-  "caramel-background": "#b24726",
-  "chocolate-background": "#5c2814",
-  "lime-background": "#365314",
+  "caramel-background": "#79311c",
+  "chocolate-background": "#38190d",
+  "lime-background": "#64770d",
   "mango-background": "#d97706",
   "berry-background": "#be185d",
   "banana-background": "#ca8a04",
@@ -86,29 +86,44 @@ const bgColorMap = {
 // Map your CSS classes to actual gradient values
 const gradientMap = {
   "caramel-background": {
-    from: "#fb6436", // orange-300
-    to: "#b24726", // orange-600
+    from: "#F2B08D", // warm orange
+    to: "#B03A0B", // deep burnt orange
+    accent: "#fc7039", // vibrant accent
   },
   "chocolate-background": {
-    from: "#AC6148", // amber-300
-    to: "#5c2814", // amber-800
+    from: "#d2b48c", // light tan
+    to: "#5c2814", // dark chocolate
+    accent: "#8b4513", // saddle brown accent
   },
   "lime-background": {
-    from: "#bef264", // lime-300
-    to: "#365314", // lime-700
+    from: "#E9F6B6", // light lime
+    to: "#6A8202", // dark slate
+    accent: "#E9F6B6", // lime accent
   },
   "mango-background": {
-    from: "#fcd34d", // amber-300
-    to: "#d97706", // amber-600
+    from: "#fed7aa", // peach
+    to: "#c27511", // orange
+    accent: "#fdd347", // amber accent
   },
   "berry-background": {
-    from: "#f9a8d4", // pink-300
-    to: "#be185d", // pink-700
+    from: "#fbb6ce", // light pink
+    to: "#9f1239", // deep rose
+    accent: "#ec4899", // pink accent
   },
   "banana-background": {
-    from: "#fde047", // yellow-300
-    to: "#ca8a04", // yellow-600
+    from: "#fef3c7", // light yellow
+    to: "#d97706", // amber
+    accent: "#f59e0b", // yellow accent
+  },
+  "tropical-background": {
+    from: "#a7f3d0", // light emerald
+    to: "#047857", // emerald
+    accent: "#10b981", // emerald accent
+  },
+  "sunset-background": {
+    from: "#fed7d7", // light red
+    to: "#dc2626", // red
+    accent: "#f87171", // red accent
   },
 };
-
 export { productList, bgColorMap, gradientMap };
