@@ -5,15 +5,14 @@ import { Helmet } from "react-helmet-async";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-import { productList } from "../constants";
+import { bgColorMap, gradientMap, productList } from "../constants";
 
 const HeroPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const currentImageRef = useRef(null);
   const backgroundRef = useRef(null);
-  const btnBackgroundRef1 = useRef(null);
-  const btnBackgroundRef2 = useRef(null);
+  const btnBackgroundRef = useRef(null);
 
   useGSAP(() => {
     gsap.from("#main-logo", {
@@ -167,49 +166,11 @@ const HeroPage = () => {
   const totalProducts = productList.length;
 
   const getButtonBackground = (bgColorClass) => {
-    // Map your CSS classes to actual gradient values
-    const colorMap = {
-      "caramel-background": "#b24726",
-      "chocolate-background": "#5c2814",
-      "lime-background": "#365314",
-      "mango-background": "#d97706",
-      "berry-background": "#be185d",
-      "banana-background": "#ca8a04",
-    };
-
-    return colorMap[bgColorClass];
+    return bgColorMap[bgColorClass];
   };
 
   // Helper function to convert Tailwind gradient classes to CSS gradients
   const getBackgroundGradient = (bgColorClass) => {
-    // Map your CSS classes to actual gradient values
-    const gradientMap = {
-      "caramel-background": {
-        from: "#fb6436", // orange-300
-        to: "#b24726", // orange-600
-      },
-      "chocolate-background": {
-        from: "#AC6148", // amber-300
-        to: "#5c2814", // amber-800
-      },
-      "lime-background": {
-        from: "#bef264", // lime-300
-        to: "#365314", // lime-700
-      },
-      "mango-background": {
-        from: "#fcd34d", // amber-300
-        to: "#d97706", // amber-600
-      },
-      "berry-background": {
-        from: "#f9a8d4", // pink-300
-        to: "#be185d", // pink-700
-      },
-      "banana-background": {
-        from: "#fde047", // yellow-300
-        to: "#ca8a04", // yellow-600
-      },
-    };
-
     const colors =
       gradientMap[bgColorClass] || gradientMap["caramel-background"];
     return `radial-gradient(circle, ${colors.from}, ${colors.to})`;
@@ -255,19 +216,12 @@ const HeroPage = () => {
       ease: "power2.inOut",
     });
 
-    const btnBgEl1 = btnBackgroundRef1.current;
-    const btnBgEl2 = btnBackgroundRef2.current;
+    const btnBgEl = btnBackgroundRef.current;
     const nextBackgroundColor = getButtonBackground(
       productList[newIndex].bgColor
     );
 
-    gsap.to(btnBgEl1, {
-      duration: 1.2,
-      background: nextBackgroundColor,
-      ease: "power2.inOut",
-    });
-
-    gsap.to(btnBgEl2, {
+    gsap.to(btnBgEl, {
       duration: 1.2,
       background: nextBackgroundColor,
       ease: "power2.inOut",
@@ -380,7 +334,7 @@ const HeroPage = () => {
               Products
             </div>
             <div
-              ref={btnBackgroundRef1}
+              ref={btnBackgroundRef}
               className="flex-center text-white text-sm w-24 h-10 rounded-3xl cursor-pointer"
               style={{
                 background: getButtonBackground(currentProduct.bgColor),
@@ -392,7 +346,7 @@ const HeroPage = () => {
           </div>
           <div className="flex-center gap-4">
             <div
-              ref={btnBackgroundRef2}
+              ref={btnBackgroundRef}
               className="flex-center text-sm p-3 rounded-full cursor-pointer"
               style={{
                 background: getButtonBackground(currentProduct.bgColor),

@@ -73,4 +73,42 @@ const productList = [
   },
 ];
 
-export { productList };
+// Map your CSS classes to actual gradient values
+const bgColorMap = {
+  "caramel-background": "#b24726",
+  "chocolate-background": "#5c2814",
+  "lime-background": "#365314",
+  "mango-background": "#d97706",
+  "berry-background": "#be185d",
+  "banana-background": "#ca8a04",
+};
+
+// Map your CSS classes to actual gradient values
+const gradientMap = {
+  "caramel-background": {
+    from: "#fb6436", // orange-300
+    to: "#b24726", // orange-600
+  },
+  "chocolate-background": {
+    from: "#AC6148", // amber-300
+    to: "#5c2814", // amber-800
+  },
+  "lime-background": {
+    from: "#bef264", // lime-300
+    to: "#365314", // lime-700
+  },
+  "mango-background": {
+    from: "#fcd34d", // amber-300
+    to: "#d97706", // amber-600
+  },
+  "berry-background": {
+    from: "#f9a8d4", // pink-300
+    to: "#be185d", // pink-700
+  },
+  "banana-background": {
+    from: "#fde047", // yellow-300
+    to: "#ca8a04", // yellow-600
+  },
+};
+
+export { productList, bgColorMap, gradientMap };
