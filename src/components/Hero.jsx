@@ -4,8 +4,7 @@ import { useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-
-import { bgColorMap, gradientMap, productList } from "../constants";
+import { bgColorMap, gradientMap, productList } from "../../constants";
 
 const HeroPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

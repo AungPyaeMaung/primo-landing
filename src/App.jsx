@@ -1,4 +1,4 @@
-import HeroPage from "../components/Hero";
+import HeroPage from "./components/Hero";
 
 const App = () => {
   return (
