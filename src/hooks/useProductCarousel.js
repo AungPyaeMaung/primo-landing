@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import gsap from "gsap";
-import { bgColorMap, gradientMap, productList } from "./constants";
+
+import { bgColorMap, gradientMap, productList } from "../../constants";
 
 export const useProductCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
