@@ -100,7 +100,7 @@ export const useProductCarousel = () => {
     const titleIncomingYPercent = 40;
 
     const sampleOutgoingYPercent = -40;
-    const sampleIncomingYPercent = 80;
+    const sampleIncomingYPercent = 60;
 
     const newImage = currentImage.cloneNode();
     newImage.src = productList[newIndex].image;
@@ -345,7 +345,7 @@ export const useProductCarousel = () => {
         yPercent: 0,
         opacity: 1,
         duration: 0.6,
-        ease: "power1.out",
+        ease: "power2.out",
       },
       0
     );

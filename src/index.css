@@ -38,8 +38,13 @@ body {
   font-family: "Antonio", sans-serif;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  user-select: none;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
+}
+
+img {
+  -webkit-user-drag: none;
 }
 
 body::-webkit-scrollbar {
