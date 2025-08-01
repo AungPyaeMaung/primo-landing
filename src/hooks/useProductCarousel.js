@@ -7,9 +7,12 @@ export const useProductCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const currentImageRef = useRef(null);
-  const titleRef = useRef(null);
-  const productSampleRef = useRef(null);
+  const titleRef = useRef(null); // Add title ref
+  const productSampleRef = useRef(null); // Add product sample ref
+  const infoRef = useRef(null); // Add info ref
+  const descriptionRef = useRef(null); // Add description ref
   const backgroundRef = useRef(null);
+  const btnRef = useRef(null);
   const btnBackgroundRef1 = useRef(null);
   const btnBackgroundRef2 = useRef(null);
 
@@ -76,8 +79,19 @@ export const useProductCarousel = () => {
     const currentImage = currentImageRef.current;
     const currentTitle = titleRef.current;
     const currentSample = productSampleRef.current;
+    const currentInfo = infoRef.current;
+    const currentDescription = descriptionRef.current;
+    const btn = btnRef.current;
 
-    if (!currentImage || !currentTitle || !currentSample) return;
+    if (
+      !currentImage ||
+      !currentTitle ||
+      !currentSample ||
+      !currentInfo ||
+      !currentDescription ||
+      !btn
+    )
+      return;
 
     const outgoingYPercent = direction === "next" ? 200 : -200;
     const incomingYPercent = direction === "next" ? -200 : 200;
@@ -108,6 +122,33 @@ export const useProductCarousel = () => {
 
     currentTitle.parentNode.appendChild(newTitle);
 
+    // Clone and setup new info
+    const newInfo = currentInfo.cloneNode(true);
+    // Update the info content
+    const infoSpans = newInfo.querySelectorAll("span");
+    if (infoSpans[0]) infoSpans[0].textContent = productList[newIndex].flavour;
+    if (infoSpans[1]) infoSpans[1].textContent = productList[newIndex].newPrice;
+    if (infoSpans[2]) infoSpans[2].textContent = productList[newIndex].oldPrice;
+
+    newInfo.style.position = "absolute";
+    newInfo.style.top = "0";
+    newInfo.style.left = "0";
+    newInfo.style.width = "100%";
+    newInfo.style.height = "100%";
+
+    currentInfo.parentNode.appendChild(newInfo);
+
+    // Clone and setup new description
+    const newDescription = currentDescription.cloneNode(true);
+    newDescription.textContent = productList[newIndex].description;
+    newDescription.style.position = "absolute";
+    newDescription.style.top = "0";
+    newDescription.style.left = "0";
+    newDescription.style.width = "100%";
+    newDescription.style.height = "100%";
+
+    currentDescription.parentNode.appendChild(newDescription);
+
     // Clone and setup new product sample
     const newSample = currentSample.cloneNode(true);
     // Update the image sources in the cloned sample
@@ -136,6 +177,16 @@ export const useProductCarousel = () => {
     });
 
     gsap.set(newSample, {
+      yPercent: sampleIncomingYPercent,
+      opacity: 1,
+    });
+
+    gsap.set(newInfo, {
+      yPercent: sampleIncomingYPercent,
+      opacity: 1,
+    });
+
+    gsap.set(newDescription, {
       yPercent: sampleIncomingYPercent,
       opacity: 1,
     });
@@ -179,15 +230,31 @@ export const useProductCarousel = () => {
             productList[newIndex].firstSampleImgPath;
         if (originalSampleImages[1])
           originalSampleImages[1].src =
-            productList[newIndex].secondSampleImgPath;
+            productList[newIndex].secondSampleImgPath; // Update original info content
+        const originalInfoSpans = currentInfo.querySelectorAll("span");
+        if (originalInfoSpans[0])
+          originalInfoSpans[0].textContent = productList[newIndex].flavour;
+        if (originalInfoSpans[1])
+          originalInfoSpans[1].textContent = productList[newIndex].newPrice;
+        if (originalInfoSpans[2])
+          originalInfoSpans[2].textContent = productList[newIndex].oldPrice;
 
+        // Update original description
+        currentDescription.textContent = productList[newIndex].description;
+
+        // Reset positions
         gsap.set(currentImage, { yPercent: 0, opacity: 1 });
         gsap.set(currentTitle, { yPercent: 0, opacity: 1 });
         gsap.set(currentSample, { yPercent: 0, opacity: 1 });
+        gsap.set(currentInfo, { yPercent: 0, opacity: 1 });
+        gsap.set(currentDescription, { yPercent: 0, opacity: 1 });
 
+        // Remove cloned elements
         newImage.remove();
         newTitle.remove();
         newSample.remove();
+        newInfo.remove();
+        newDescription.remove();
 
         setCurrentIndex(newIndex);
         setIsAnimating(false);
@@ -228,6 +295,27 @@ export const useProductCarousel = () => {
       0
     );
 
+    tl.to(
+      currentInfo,
+      {
+        yPercent: sampleOutgoingYPercent,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.out",
+      },
+      0
+    );
+
+    tl.to(
+      currentDescription,
+      {
+        yPercent: sampleOutgoingYPercent,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.out",
+      },
+      0
+    );
     // Animate incoming elements
     tl.to(
       newImage,
@@ -253,6 +341,42 @@ export const useProductCarousel = () => {
 
     tl.to(
       newSample,
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.6,
+        ease: "power1.out",
+      },
+      0
+    );
+
+    tl.to(
+      newInfo,
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.6,
+        ease: "power1.out",
+      },
+      0
+    );
+
+    tl.to(
+      newDescription,
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.6,
+        ease: "power1.out",
+      },
+      0
+    );
+
+    tl.fromTo(
+      btn,
+      {
+        yPercent: sampleIncomingYPercent,
+      },
       {
         yPercent: 0,
         opacity: 1,
@@ -292,6 +416,9 @@ export const useProductCarousel = () => {
     currentImageRef,
     titleRef,
     productSampleRef,
+    infoRef,
+    descriptionRef,
+    btnRef,
     backgroundRef,
     btnBackgroundRef1,
     btnBackgroundRef2,

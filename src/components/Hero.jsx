@@ -14,6 +14,9 @@ const Hero = () => {
     titleRef,
     productSampleRef,
     currentImageRef,
+    infoRef,
+    descriptionRef,
+    btnRef,
     backgroundRef,
     btnBackgroundRef1,
     btnBackgroundRef2,
@@ -73,7 +76,13 @@ const Hero = () => {
         />
 
         <div className="md:absolute md:bottom-20 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
-          <ProductInfo currentProduct={currentProduct} titleRef={titleRef} />
+          <ProductInfo
+            currentProduct={currentProduct}
+            titleRef={titleRef}
+            infoRef={infoRef}
+            btnRef={btnRef}
+            descriptionRef={descriptionRef}
+          />
 
           <span
             id="price"
