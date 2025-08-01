@@ -17,6 +17,7 @@ const Hero = () => {
     infoRef,
     descriptionRef,
     btnRef,
+    priceRef,
     backgroundRef,
     btnBackgroundRef1,
     btnBackgroundRef2,
@@ -84,12 +85,11 @@ const Hero = () => {
             descriptionRef={descriptionRef}
           />
 
-          <span
-            id="price"
-            className="font-semibold text-4xl self-center md:mr-32 md:self-end"
-          >
-            {currentProduct.newPrice}
-          </span>
+          <div className="relative font-semibold text-4xl self-center md:mr-32 md:self-end">
+            <span ref={priceRef} id="price" className="inline-block inset-0">
+              {currentProduct.newPrice}
+            </span>
+          </div>
 
           <NavigationControls
             currentProduct={currentProduct}

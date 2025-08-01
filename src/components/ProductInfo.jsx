@@ -12,12 +12,12 @@ const ProductInfo = ({
         {/* Add overflow-hidden to prevent clipped text from showing */}
         <span
           ref={titleRef}
-          className="inline-block text-5xl md:w-[11rem] inset-0 self-center md:self-start"
+          className="inline-block text-5xl w-[20rem] md:w-[11rem] inset-0 text-center md:text-left self-center md:self-start"
         >
           {currentProduct.name}
         </span>
       </div>
-      <div className="relative md:w-[19.5rem]">
+      <div className="relative w-full md:w-[19.5rem]">
         <div
           ref={infoRef}
           id="basic-info"
@@ -32,7 +32,7 @@ const ProductInfo = ({
           </span>
         </div>
       </div>
-      <div className="relative md:h-[5rem]">
+      <div className="relative w-full h-[5rem]">
         <p
           ref={descriptionRef}
           id="description"
