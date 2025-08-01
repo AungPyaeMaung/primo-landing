@@ -1,8 +1,15 @@
-const ProductInfo = ({ currentProduct }) => {
+const ProductInfo = ({ currentProduct, titleRef }) => {
   return (
     <div className="flex flex-col items-center md:items-start justify-between gap-5 w-full md:w-xs text-wrap">
-      <div id="title" className="md:w-[5px] self-center md:self-start">
-        <span className="text-5xl">{currentProduct.name}</span>
+      <div className="relative overflow-hidden">
+        {" "}
+        {/* Add overflow-hidden to prevent clipped text from showing */}
+        <span
+          ref={titleRef}
+          className="inline-block text-5xl md:w-[11rem] inset-0 self-center md:self-start"
+        >
+          {currentProduct.name}
+        </span>
       </div>
       <div id="basic-info" className="flex-between font-light gap-5">
         <span id="name">{currentProduct.flavour}</span>

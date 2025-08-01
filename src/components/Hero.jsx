@@ -11,6 +11,7 @@ import NavigationControls from "./NavigationControls";
 const Hero = () => {
   const {
     isAnimating,
+    titleRef,
     currentImageRef,
     backgroundRef,
     btnBackgroundRef1,
@@ -22,7 +23,7 @@ const Hero = () => {
     getProductAt,
   } = useProductCarousel();
 
-  useInitialAnimations(currentImageRef);
+  useInitialAnimations(currentImageRef, titleRef);
 
   const currentProduct = getProductAt(0);
 
@@ -71,7 +72,7 @@ const Hero = () => {
         />
 
         <div className="md:absolute md:bottom-20 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
-          <ProductInfo currentProduct={currentProduct} />
+          <ProductInfo currentProduct={currentProduct} titleRef={titleRef} />
 
           <span
             id="price"

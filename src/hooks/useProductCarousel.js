@@ -7,6 +7,7 @@ export const useProductCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const currentImageRef = useRef(null);
+  const titleRef = useRef(null);
   const backgroundRef = useRef(null);
   const btnBackgroundRef1 = useRef(null);
   const btnBackgroundRef2 = useRef(null);
@@ -72,10 +73,15 @@ export const useProductCarousel = () => {
     setIsAnimating(true);
 
     const currentImage = currentImageRef.current;
-    if (!currentImage) return;
+    const currentTitle = titleRef.current;
+
+    if (!currentImage || !currentTitle) return;
 
     const outgoingYPercent = direction === "next" ? 200 : -200;
     const incomingYPercent = direction === "next" ? -200 : 200;
+
+    const titleOutgoingYPercent = -120;
+    const titleIncomingYPercent = 40;
 
     const newImage = currentImage.cloneNode();
     newImage.src = productList[newIndex].image;
@@ -87,8 +93,23 @@ export const useProductCarousel = () => {
 
     currentImage.parentNode.appendChild(newImage);
 
+    const newTitle = currentTitle.cloneNode(true);
+    newTitle.textContent = productList[newIndex].name;
+    newTitle.style.position = "absolute";
+    newTitle.style.top = "0";
+    newTitle.style.left = "0";
+    newTitle.style.width = "100%";
+    newTitle.style.height = "100%";
+
+    currentTitle.parentNode.appendChild(newTitle);
+
     gsap.set(newImage, {
       yPercent: incomingYPercent,
+      opacity: 1,
+    });
+
+    gsap.set(newTitle, {
+      yPercent: titleIncomingYPercent,
       opacity: 1,
     });
 
@@ -122,13 +143,20 @@ export const useProductCarousel = () => {
     const tl = gsap.timeline({
       onComplete: () => {
         currentImage.src = productList[newIndex].image;
+        currentTitle.textContent = productList[newIndex].name;
+
         gsap.set(currentImage, { yPercent: 0, opacity: 1 });
+        gsap.set(currentTitle, { yPercent: 0, opacity: 1 });
+
         newImage.remove();
+        newTitle.remove();
+
         setCurrentIndex(newIndex);
         setIsAnimating(false);
       },
     });
 
+    // Animate outgoing elements
     tl.to(
       currentImage,
       {
@@ -141,11 +169,34 @@ export const useProductCarousel = () => {
     );
 
     tl.to(
+      currentTitle,
+      {
+        yPercent: titleOutgoingYPercent,
+        opacity: 1,
+        duration: 0.1,
+        ease: "power1.inOut",
+      },
+      0
+    );
+
+    // Animate incoming elements
+    tl.to(
       newImage,
       {
         yPercent: 0,
         opacity: 1,
         duration: 1,
+        ease: "power1.out",
+      },
+      0
+    );
+
+    tl.to(
+      newTitle,
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.4,
         ease: "power1.out",
       },
       0
@@ -179,6 +230,7 @@ export const useProductCarousel = () => {
     currentIndex,
     isAnimating,
     currentImageRef,
+    titleRef,
     backgroundRef,
     btnBackgroundRef1,
     btnBackgroundRef2,

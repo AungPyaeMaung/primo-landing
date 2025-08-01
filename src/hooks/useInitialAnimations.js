@@ -1,7 +1,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-export const useInitialAnimations = (currentImageRef) => {
+export const useInitialAnimations = (currentImageRef, titleRef) => {
   useGSAP(() => {
     gsap.from("#main-logo", {
       xPercent: 200,
@@ -22,12 +22,18 @@ export const useInitialAnimations = (currentImageRef) => {
       );
     }
 
-    gsap.from("#title", {
-      yPercent: 30,
-      opacity: 0,
-      duration: "1",
-      ease: "power1.out",
-    });
+    if (titleRef.current) {
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, yPercent: 30 },
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power1.out",
+        }
+      );
+    }
 
     gsap.from(
       "#basic-info",
