@@ -16,6 +16,8 @@ export const useProductCarousel = () => {
   const priceRef = useRef(null);
   const btnBackgroundRef1 = useRef(null);
   const btnBackgroundRef2 = useRef(null);
+  const sizeRef1 = useRef(null);
+  const sizeRef2 = useRef(null);
 
   const totalProducts = productList.length;
 
@@ -217,6 +219,10 @@ export const useProductCarousel = () => {
 
     const btnBgEl1 = btnBackgroundRef1.current;
     const btnBgEl2 = btnBackgroundRef2.current;
+
+    const sizeBgEl1 = sizeRef1.current;
+    const sizeBgEl2 = sizeRef2.current;
+
     const nextBackgroundColor = getButtonBackground(
       productList[newIndex].bgColor
     );
@@ -228,6 +234,18 @@ export const useProductCarousel = () => {
     });
 
     gsap.to(btnBgEl2, {
+      duration: 1.2,
+      background: nextBackgroundColor,
+      ease: "power2.inOut",
+    });
+
+    gsap.to(sizeBgEl1, {
+      duration: 1.2,
+      background: nextBackgroundColor,
+      ease: "power2.inOut",
+    });
+
+    gsap.to(sizeBgEl2, {
       duration: 1.2,
       background: nextBackgroundColor,
       ease: "power2.inOut",
@@ -465,6 +483,8 @@ export const useProductCarousel = () => {
     backgroundRef,
     btnBackgroundRef1,
     btnBackgroundRef2,
+    sizeRef1,
+    sizeRef2,
     getButtonBackground,
     getBackgroundGradient,
     goToNext,
