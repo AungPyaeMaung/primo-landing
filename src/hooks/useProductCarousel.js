@@ -8,6 +8,7 @@ export const useProductCarousel = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const currentImageRef = useRef(null);
   const titleRef = useRef(null);
+  const productSampleRef = useRef(null);
   const backgroundRef = useRef(null);
   const btnBackgroundRef1 = useRef(null);
   const btnBackgroundRef2 = useRef(null);
@@ -74,14 +75,18 @@ export const useProductCarousel = () => {
 
     const currentImage = currentImageRef.current;
     const currentTitle = titleRef.current;
+    const currentSample = productSampleRef.current;
 
-    if (!currentImage || !currentTitle) return;
+    if (!currentImage || !currentTitle || !currentSample) return;
 
     const outgoingYPercent = direction === "next" ? 200 : -200;
     const incomingYPercent = direction === "next" ? -200 : 200;
 
     const titleOutgoingYPercent = -120;
     const titleIncomingYPercent = 40;
+
+    const sampleOutgoingYPercent = -40;
+    const sampleIncomingYPercent = 80;
 
     const newImage = currentImage.cloneNode();
     newImage.src = productList[newIndex].image;
@@ -103,6 +108,23 @@ export const useProductCarousel = () => {
 
     currentTitle.parentNode.appendChild(newTitle);
 
+    // Clone and setup new product sample
+    const newSample = currentSample.cloneNode(true);
+    // Update the image sources in the cloned sample
+    const sampleImages = newSample.querySelectorAll("img");
+    if (sampleImages[0])
+      sampleImages[0].src = productList[newIndex].firstSampleImgPath;
+    if (sampleImages[1])
+      sampleImages[1].src = productList[newIndex].secondSampleImgPath;
+
+    newSample.style.position = "absolute";
+    newSample.style.top = "0";
+    newSample.style.left = "0";
+    newSample.style.width = "100%";
+    newSample.style.height = "100%";
+
+    currentSample.parentNode.appendChild(newSample);
+
     gsap.set(newImage, {
       yPercent: incomingYPercent,
       opacity: 1,
@@ -110,6 +132,11 @@ export const useProductCarousel = () => {
 
     gsap.set(newTitle, {
       yPercent: titleIncomingYPercent,
+      opacity: 1,
+    });
+
+    gsap.set(newSample, {
+      yPercent: sampleIncomingYPercent,
       opacity: 1,
     });
 
@@ -145,11 +172,22 @@ export const useProductCarousel = () => {
         currentImage.src = productList[newIndex].image;
         currentTitle.textContent = productList[newIndex].name;
 
+        // Update original sample images
+        const originalSampleImages = currentSample.querySelectorAll("img");
+        if (originalSampleImages[0])
+          originalSampleImages[0].src =
+            productList[newIndex].firstSampleImgPath;
+        if (originalSampleImages[1])
+          originalSampleImages[1].src =
+            productList[newIndex].secondSampleImgPath;
+
         gsap.set(currentImage, { yPercent: 0, opacity: 1 });
         gsap.set(currentTitle, { yPercent: 0, opacity: 1 });
+        gsap.set(currentSample, { yPercent: 0, opacity: 1 });
 
         newImage.remove();
         newTitle.remove();
+        newSample.remove();
 
         setCurrentIndex(newIndex);
         setIsAnimating(false);
@@ -179,6 +217,17 @@ export const useProductCarousel = () => {
       0
     );
 
+    tl.to(
+      currentSample,
+      {
+        yPercent: sampleOutgoingYPercent,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power2.out",
+      },
+      0
+    );
+
     // Animate incoming elements
     tl.to(
       newImage,
@@ -197,6 +246,17 @@ export const useProductCarousel = () => {
         yPercent: 0,
         opacity: 1,
         duration: 0.4,
+        ease: "power1.out",
+      },
+      0
+    );
+
+    tl.to(
+      newSample,
+      {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.6,
         ease: "power1.out",
       },
       0
@@ -231,6 +291,7 @@ export const useProductCarousel = () => {
     isAnimating,
     currentImageRef,
     titleRef,
+    productSampleRef,
     backgroundRef,
     btnBackgroundRef1,
     btnBackgroundRef2,

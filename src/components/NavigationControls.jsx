@@ -3,6 +3,7 @@ const NavigationControls = ({
   goToPrev,
   goToNext,
   isAnimating,
+  productSampleRef,
 }) => {
   return (
     <div className="flex flex-col justify-between items-center md:self-end gap-2">
@@ -33,19 +34,21 @@ const NavigationControls = ({
             />
           </div>
         </div>
-        <div className="flex-between gap-2">
-          <img
-            id="sample-1"
-            alt="sample-1"
-            src={currentProduct.firstSampleImgPath}
-            className="w-20 h-20 rounded-2xl"
-          />
-          <img
-            id="sample-2"
-            alt="sample-2"
-            src={currentProduct.secondSampleImgPath}
-            className="w-20 h-20 rounded-2xl"
-          />
+        <div className="relative">
+          <div ref={productSampleRef} className="inset-0 flex-between gap-2">
+            <img
+              id="sample-1"
+              alt="sample-1"
+              src={currentProduct.firstSampleImgPath}
+              className="w-20 h-20 rounded-2xl"
+            />
+            <img
+              id="sample-2"
+              alt="sample-2"
+              src={currentProduct.secondSampleImgPath}
+              className="w-20 h-20 rounded-2xl"
+            />
+          </div>
         </div>
       </div>
       <div id="counter" className="flex-between gap-5">

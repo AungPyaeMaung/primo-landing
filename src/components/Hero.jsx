@@ -12,6 +12,7 @@ const Hero = () => {
   const {
     isAnimating,
     titleRef,
+    productSampleRef,
     currentImageRef,
     backgroundRef,
     btnBackgroundRef1,
@@ -85,6 +86,7 @@ const Hero = () => {
             currentProduct={currentProduct}
             goToPrev={goToPrev}
             goToNext={goToNext}
+            productSampleRef={productSampleRef}
             isAnimating={isAnimating}
           />
         </div>
