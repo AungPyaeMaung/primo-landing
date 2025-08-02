@@ -2,9 +2,9 @@ import { useState, useCallback, useMemo } from "react";
 import gsap from "gsap";
 
 import { useCarouselRefs } from "./useCarouselRefs";
-import { productList, ANIMATION_CONFIG } from "../../constants";
 import { useBackgroundUtils } from "./useBackgroundUtils";
 import { useCarouselAnimations } from "./useCarouselAnimations";
+import { productList } from "../../constants";
 
 // Utility function for debouncing rapid clicks
 const debounce = (func, wait) => {
@@ -23,14 +23,14 @@ const debounce = (func, wait) => {
 const createClonedElement = (originalElement) => {
   if (!originalElement) return null;
 
-  const cloned = originalElement.cloneNode(true);
-  cloned.style.position = "absolute";
-  cloned.style.top = "0";
-  cloned.style.left = "0";
-  cloned.style.width = "100%";
-  cloned.style.height = "100%";
+  const clonedElement = originalElement.cloneNode(true);
+  clonedElement.style.position = "absolute";
+  clonedElement.style.top = "0";
+  clonedElement.style.left = "0";
+  clonedElement.style.width = "100%";
+  clonedElement.style.height = "100%";
 
-  return cloned;
+  return clonedElement;
 };
 
 const updateElementContent = (element, product, type) => {
