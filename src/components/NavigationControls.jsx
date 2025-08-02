@@ -13,7 +13,7 @@ const NavigationControls = ({
             onClick={goToPrev}
             disabled={isAnimating}
             id="arrowleft"
-            className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border"
+            className="flex-center text-sm p-3 rounded-full cursor-pointer border-white md:border-slate-500 xl:border-white border"
           >
             <img
               alt="arrowleft"
@@ -25,7 +25,7 @@ const NavigationControls = ({
             onClick={goToNext}
             disabled={isAnimating}
             id="arrowright"
-            className="flex-center text-sm p-3 rounded-full cursor-pointer border-white border rotate-180"
+            className="flex-center text-sm p-3 rounded-full cursor-pointer border-white md:border-slate-500 xl:border-white border rotate-180"
           >
             <img
               alt="arrowright"
