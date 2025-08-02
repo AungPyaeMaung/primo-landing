@@ -136,4 +136,28 @@ const gradientMap = {
     accent: "#f87171", // red accent
   },
 };
-export { productList, bgColorMap, gradientMap };
+
+// Animation configuration constants
+const ANIMATION_CONFIG = {
+  durations: {
+    background: 1.2,
+    transition: 0.8,
+    title: 0.4,
+    content: 0.6,
+    button: 0.6,
+  },
+  offsets: {
+    image: { outgoing: 250, incoming: -250 },
+    title: { outgoing: -120, incoming: 40 },
+    content: { outgoing: -40, incoming: 60 },
+  },
+  easing: {
+    background: "power2.inOut",
+    imageIn: "power1.out",
+    imageOut: "power1.inOut",
+    contentOut: "power2.out",
+    contentIn: "power1.out",
+  },
+};
+
+export { productList, bgColorMap, gradientMap, ANIMATION_CONFIG };

@@ -1,495 +1,286 @@
-import { useRef, useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import gsap from "gsap";
 
-import { bgColorMap, gradientMap, productList } from "../../constants";
+import { useCarouselRefs } from "./useCarouselRefs";
+import { productList, ANIMATION_CONFIG } from "../../constants";
+import { useBackgroundUtils } from "./useBackgroundUtils";
+import { useCarouselAnimations } from "./useCarouselAnimations";
 
+// Utility function for debouncing rapid clicks
+const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
+// Utility functions for DOM manipulation
+const createClonedElement = (originalElement) => {
+  if (!originalElement) return null;
+
+  const cloned = originalElement.cloneNode(true);
+  cloned.style.position = "absolute";
+  cloned.style.top = "0";
+  cloned.style.left = "0";
+  cloned.style.width = "100%";
+  cloned.style.height = "100%";
+
+  return cloned;
+};
+
+const updateElementContent = (element, product, type) => {
+  if (!element || !product) return;
+
+  const infoSpans = element.querySelectorAll("span");
+  const sampleImages = element.querySelectorAll("img");
+
+  switch (type) {
+    case "image":
+      element.src = product.image;
+      break;
+    case "title":
+      element.textContent = product.name;
+      break;
+    case "description":
+      element.textContent = product.description;
+      break;
+    case "price":
+      element.textContent = product.newPrice;
+      break;
+    case "info":
+      if (infoSpans[0]) infoSpans[0].textContent = product.flavour;
+      if (infoSpans[1]) infoSpans[1].textContent = product.newPrice;
+      if (infoSpans[2]) infoSpans[2].textContent = product.oldPrice;
+      break;
+    case "sample":
+      if (sampleImages[0]) sampleImages[0].src = product.firstSampleImgPath;
+      if (sampleImages[1]) sampleImages[1].src = product.secondSampleImgPath;
+      break;
+    default:
+      break;
+  }
+};
+
+// Main carousel hook
 export const useProductCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const currentImageRef = useRef(null);
-  const titleRef = useRef(null); // Add title ref
-  const productSampleRef = useRef(null); // Add product sample ref
-  const infoRef = useRef(null); // Add info ref
-  const descriptionRef = useRef(null); // Add description ref
-  const backgroundRef = useRef(null);
-  const btnRef = useRef(null);
-  const priceRef = useRef(null);
-  const btnBackgroundRef1 = useRef(null);
-  const btnBackgroundRef2 = useRef(null);
-  const sizeRef1 = useRef(null);
-  const sizeRef2 = useRef(null);
 
-  const totalProducts = productList.length;
+  const refs = useCarouselRefs();
+  const { getButtonBackground, getBackgroundGradient } = useBackgroundUtils();
+  const { animateBackgroundElements, createAnimationTimeline } =
+    useCarouselAnimations(refs, getBackgroundGradient, getButtonBackground);
 
-  const getButtonBackground = (bgColorClass) => {
-    return bgColorMap[bgColorClass];
-  };
+  // Check for reduced motion preference
+  const prefersReducedMotion = useMemo(() => {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
 
-  const getBackgroundGradient = (
-    bgColorClass,
-    gradientType = "product-halo"
-  ) => {
-    const colors =
-      gradientMap[bgColorClass] || gradientMap["caramel-background"];
+  const animateImageTransition = useCallback(
+    (newIndex, direction) => {
+      if (isAnimating || newIndex === currentIndex) return;
 
-    switch (gradientType) {
-      case "product-focused":
-        return `
-        radial-gradient(circle 700px at center, ${colors.from}80, transparent 60%),
-        radial-gradient(circle 1000px at center, ${colors.accent}40, transparent 70%),
-        ${colors.to}
-      `;
-      case "product-glow":
-        return `
-        radial-gradient(circle 800px at 50% 45%, ${colors.from}90, transparent 20%),
-        radial-gradient(circle 1000px at 50% 45%, ${colors.accent}30, transparent 40%),
-        ${colors.to}
-      `;
-      case "spotlight":
-        return `
-        radial-gradient(circle 1000px at center, ${colors.from}95, transparent 80%),
-        ${colors.to}
-      `;
-      case "ambient-light":
-        return `
-        radial-gradient(circle 220px at 48% 42%, ${colors.from}60, transparent 90%),
-        radial-gradient(circle 120px at 52% 48%, ${colors.accent}40, transparent 100%),
-        ${colors.to}
-      `;
-      case "product-halo":
-        return `
-        radial-gradient(circle 700px at center, ${colors.from}85, transparent 75%),
-        radial-gradient(circle 800px at center, ${colors.from}25, transparent 85%),
-        ${colors.to}
-      `;
-      case "radial":
-        return `radial-gradient(circle at 30% 20%, ${colors.from}, ${colors.to})`;
-      case "linear":
-        return `linear-gradient(135deg, ${colors.from}, ${colors.to})`;
-      default:
-        return `
-        radial-gradient(circle 200px at center, ${colors.from}80, transparent 60%),
-        radial-gradient(circle 300px at center, ${colors.accent}40, transparent 70%),
-        ${colors.to}
-      `;
-    }
-  };
+      // Skip animation if user prefers reduced motion
+      if (prefersReducedMotion) {
+        setCurrentIndex(newIndex);
+        return;
+      }
 
-  const animateImageTransition = (newIndex, direction) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+      setIsAnimating(true);
 
-    const currentImage = currentImageRef.current;
-    const currentTitle = titleRef.current;
-    const currentSample = productSampleRef.current;
-    const currentInfo = infoRef.current;
-    const currentDescription = descriptionRef.current;
-    const btn = btnRef.current;
-    const currentPrice = priceRef.current;
+      const product = productList[newIndex];
+      const {
+        currentImageRef,
+        titleRef,
+        productSampleRef,
+        infoRef,
+        descriptionRef,
+        priceRef,
+      } = refs;
 
-    if (
-      !currentImage ||
-      !currentTitle ||
-      !currentSample ||
-      !currentInfo ||
-      !currentDescription ||
-      !btn ||
-      !currentPrice
-    )
-      return;
+      // Validate all required refs
+      const requiredRefs = [
+        currentImageRef,
+        titleRef,
+        productSampleRef,
+        infoRef,
+        descriptionRef,
+        priceRef,
+      ];
 
-    const outgoingYPercent = direction === "next" ? 250 : -250;
-    const incomingYPercent = direction === "next" ? -250 : 250;
+      if (requiredRefs.some((ref) => !ref.current)) {
+        console.warn("Some required refs are not attached");
+        setIsAnimating(false);
+        return;
+      }
 
-    const titleOutgoingYPercent = -120;
-    const titleIncomingYPercent = 40;
+      const originalElements = {
+        image: currentImageRef.current,
+        title: titleRef.current,
+        sample: productSampleRef.current,
+        info: infoRef.current,
+        description: descriptionRef.current,
+        price: priceRef.current,
+      };
 
-    const sampleOutgoingYPercent = -40;
-    const sampleIncomingYPercent = 60;
+      // Create cloned elements
+      const clonedElements = {};
+      Object.entries(originalElements).forEach(([key, element]) => {
+        const cloned = createClonedElement(element);
+        if (cloned) {
+          updateElementContent(cloned, product, key);
+          element.parentNode.appendChild(cloned);
+          clonedElements[key] = cloned;
+        }
+      });
 
-    const newImage = currentImage.cloneNode();
-    newImage.src = productList[newIndex].image;
-    newImage.style.position = "absolute";
-    newImage.style.top = "0";
-    newImage.style.left = "0";
-    newImage.style.width = "100%";
-    newImage.style.height = "100%";
+      // Animate background elements
+      animateBackgroundElements(product);
 
-    currentImage.parentNode.appendChild(newImage);
-
-    const newTitle = currentTitle.cloneNode(true);
-    newTitle.textContent = productList[newIndex].name;
-    newTitle.style.position = "absolute";
-    newTitle.style.top = "0";
-    newTitle.style.left = "0";
-    newTitle.style.width = "100%";
-    newTitle.style.height = "100%";
-
-    currentTitle.parentNode.appendChild(newTitle);
-
-    // Clone and setup new info
-    const newInfo = currentInfo.cloneNode(true);
-    // Update the info content
-    const infoSpans = newInfo.querySelectorAll("span");
-    if (infoSpans[0]) infoSpans[0].textContent = productList[newIndex].flavour;
-    if (infoSpans[1]) infoSpans[1].textContent = productList[newIndex].newPrice;
-    if (infoSpans[2]) infoSpans[2].textContent = productList[newIndex].oldPrice;
-
-    newInfo.style.position = "absolute";
-    newInfo.style.top = "0";
-    newInfo.style.left = "0";
-    newInfo.style.width = "100%";
-    newInfo.style.height = "100%";
-
-    currentInfo.parentNode.appendChild(newInfo);
-
-    // Clone and setup new description
-    const newDescription = currentDescription.cloneNode(true);
-    newDescription.textContent = productList[newIndex].description;
-    newDescription.style.position = "absolute";
-    newDescription.style.top = "0";
-    newDescription.style.left = "0";
-    newDescription.style.width = "100%";
-    newDescription.style.height = "100%";
-
-    currentDescription.parentNode.appendChild(newDescription);
-
-    // Clone and setup new product sample
-    const newSample = currentSample.cloneNode(true);
-    // Update the image sources in the cloned sample
-    const sampleImages = newSample.querySelectorAll("img");
-    if (sampleImages[0])
-      sampleImages[0].src = productList[newIndex].firstSampleImgPath;
-    if (sampleImages[1])
-      sampleImages[1].src = productList[newIndex].secondSampleImgPath;
-
-    newSample.style.position = "absolute";
-    newSample.style.top = "0";
-    newSample.style.left = "0";
-    newSample.style.width = "100%";
-    newSample.style.height = "100%";
-
-    currentSample.parentNode.appendChild(newSample);
-
-    const newPrice = currentPrice.cloneNode(true);
-    newPrice.textContent = productList[newIndex].newPrice;
-    newPrice.style.position = "absolute";
-    newPrice.style.top = "0";
-    newPrice.style.left = "0";
-    newPrice.style.width = "100%";
-    newPrice.style.height = "100%";
-
-    gsap.set(newImage, {
-      yPercent: incomingYPercent,
-      opacity: 1,
-    });
-
-    gsap.set(newTitle, {
-      yPercent: titleIncomingYPercent,
-      opacity: 1,
-    });
-
-    gsap.set(newSample, {
-      yPercent: sampleIncomingYPercent,
-      opacity: 1,
-    });
-
-    gsap.set(newInfo, {
-      yPercent: sampleIncomingYPercent,
-      opacity: 1,
-    });
-
-    gsap.set(newDescription, {
-      yPercent: sampleIncomingYPercent,
-      opacity: 1,
-    });
-    gsap.set(newPrice, {
-      yPercent: sampleIncomingYPercent,
-      opacity: 1,
-    });
-
-    const bgEl = backgroundRef.current;
-    const nextGradient = getBackgroundGradient(productList[newIndex].bgColor);
-
-    gsap.to(bgEl, {
-      duration: 1.2,
-      background: nextGradient,
-      ease: "power2.inOut",
-    });
-
-    const btnBgEl1 = btnBackgroundRef1.current;
-    const btnBgEl2 = btnBackgroundRef2.current;
-
-    const sizeBgEl1 = sizeRef1.current;
-    const sizeBgEl2 = sizeRef2.current;
-
-    const nextBackgroundColor = getButtonBackground(
-      productList[newIndex].bgColor
-    );
-
-    gsap.to(btnBgEl1, {
-      duration: 1.2,
-      background: nextBackgroundColor,
-      ease: "power2.inOut",
-    });
-
-    gsap.to(btnBgEl2, {
-      duration: 1.2,
-      background: nextBackgroundColor,
-      ease: "power2.inOut",
-    });
-
-    gsap.to(sizeBgEl1, {
-      duration: 1.2,
-      background: nextBackgroundColor,
-      ease: "power2.inOut",
-    });
-
-    gsap.to(sizeBgEl2, {
-      duration: 1.2,
-      background: nextBackgroundColor,
-      ease: "power2.inOut",
-    });
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        currentImage.src = productList[newIndex].image;
-        currentTitle.textContent = productList[newIndex].name;
-
-        // Update original sample images
-        const originalSampleImages = currentSample.querySelectorAll("img");
-        if (originalSampleImages[0])
-          originalSampleImages[0].src =
-            productList[newIndex].firstSampleImgPath;
-        if (originalSampleImages[1])
-          originalSampleImages[1].src =
-            productList[newIndex].secondSampleImgPath; // Update original info content
-        const originalInfoSpans = currentInfo.querySelectorAll("span");
-        if (originalInfoSpans[0])
-          originalInfoSpans[0].textContent = productList[newIndex].flavour;
-        if (originalInfoSpans[1])
-          originalInfoSpans[1].textContent = productList[newIndex].newPrice;
-        if (originalInfoSpans[2])
-          originalInfoSpans[2].textContent = productList[newIndex].oldPrice;
-
-        // Update original description
-        currentDescription.textContent = productList[newIndex].description;
-
-        // update price
-        currentPrice.textContent = productList[newIndex].newPrice;
-
-        // Reset positions
-        gsap.set(currentImage, { yPercent: 0, opacity: 1 });
-        gsap.set(currentTitle, { yPercent: 0, opacity: 1 });
-        gsap.set(currentSample, { yPercent: 0, opacity: 1 });
-        gsap.set(currentInfo, { yPercent: 0, opacity: 1 });
-        gsap.set(currentDescription, { yPercent: 0, opacity: 1 });
-        gsap.set(currentPrice, { yPercent: 0, opacity: 1 });
+      // Create and execute animation timeline
+      const cleanup = () => {
+        // Update original elements
+        Object.entries(originalElements).forEach(([key, element]) => {
+          updateElementContent(element, product, key);
+          gsap.set(element, { yPercent: 0, opacity: 1 });
+        });
 
         // Remove cloned elements
-        newImage.remove();
-        newTitle.remove();
-        newSample.remove();
-        newInfo.remove();
-        newDescription.remove();
-        newPrice.remove();
+        Object.values(clonedElements).forEach((element) => {
+          if (element && element.parentNode) {
+            element.remove();
+          }
+        });
 
         setCurrentIndex(newIndex);
         setIsAnimating(false);
-      },
-    });
+      };
 
-    // Animate outgoing elements
-    tl.to(
-      currentImage,
-      {
-        yPercent: outgoingYPercent,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power1.inOut",
-      },
-      0
-    );
+      createAnimationTimeline(
+        originalElements,
+        clonedElements,
+        product,
+        direction,
+        cleanup
+      );
+    },
+    [
+      isAnimating,
+      currentIndex,
+      refs,
+      animateBackgroundElements,
+      createAnimationTimeline,
+      prefersReducedMotion,
+    ]
+  );
 
-    tl.to(
-      currentTitle,
-      {
-        yPercent: titleOutgoingYPercent,
-        opacity: 1,
-        duration: 0.1,
-        ease: "power1.inOut",
-      },
-      0
-    );
+  // Create the core slide function first
+  const slideToIndex = useCallback(
+    (index, direction = "next") => {
+      if (isAnimating) return;
+      // Validation
+      if (!productList || productList.length === 0) {
+        console.warn("Product list is empty or undefined");
+        return null;
+      }
 
-    tl.to(
-      currentSample,
-      {
-        yPercent: sampleOutgoingYPercent,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      0
-    );
+      const totalProducts = productList.length;
+      const newIndex = (index + totalProducts) % totalProducts;
+      if (newIndex === currentIndex) return;
+      animateImageTransition(newIndex, direction);
+    },
+    [isAnimating, currentIndex, animateImageTransition]
+  );
 
-    tl.to(
-      currentInfo,
-      {
-        yPercent: sampleOutgoingYPercent,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      0
-    );
+  // Create debounced version
+  const goToSlide = useMemo(() => debounce(slideToIndex, 100), [slideToIndex]);
 
-    tl.to(
-      currentDescription,
-      {
-        yPercent: sampleOutgoingYPercent,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      0
-    );
+  const goToNext = useCallback(() => {
+    // Validation
+    if (!productList || productList.length === 0) {
+      console.warn("Product list is empty or undefined");
+      return null;
+    }
 
-    tl.to(
-      currentPrice,
-      {
-        yPercent: sampleOutgoingYPercent,
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      0
-    );
-    // Animate incoming elements
-    tl.to(
-      newImage,
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 1,
-        ease: "power1.out",
-      },
-      0
-    );
-
-    tl.to(
-      newTitle,
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.4,
-        ease: "power1.out",
-      },
-      0
-    );
-
-    tl.to(
-      newSample,
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power2.out",
-      },
-      0
-    );
-
-    tl.to(
-      newInfo,
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power1.out",
-      },
-      0
-    );
-
-    tl.to(
-      newDescription,
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power1.out",
-      },
-      0
-    );
-
-    tl.to(
-      newPrice,
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power1.out",
-      },
-      0
-    );
-
-    tl.fromTo(
-      btn,
-      {
-        yPercent: sampleIncomingYPercent,
-      },
-      {
-        yPercent: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power1.out",
-      },
-      0
-    );
-  };
-
-  const goToSlide = (index, direction = "next") => {
-    if (isAnimating) return;
-    const newIndex = (index + totalProducts) % totalProducts;
-    if (newIndex === currentIndex) return;
-    animateImageTransition(newIndex, direction);
-  };
-
-  const goToNext = () => {
+    const totalProducts = productList.length;
     const nextIndex = (currentIndex + 1) % totalProducts;
     goToSlide(nextIndex, "next");
-  };
+  }, [currentIndex, goToSlide]);
 
-  const goToPrev = () => {
+  const goToPrev = useCallback(() => {
+    // Validation
+    if (!productList || productList.length === 0) {
+      console.warn("Product list is empty or undefined");
+      return null;
+    }
+
+    const totalProducts = productList.length;
     const prevIndex = (currentIndex - 1 + totalProducts) % totalProducts;
     goToSlide(prevIndex, "prev");
-  };
+  }, [currentIndex, goToSlide]);
 
-  const getProductAt = (indexOffset) => {
-    return productList[
-      (currentIndex + indexOffset + totalProducts) % totalProducts
-    ];
-  };
+  const getProductAt = useCallback(
+    (indexOffset) => {
+      // Validation
+      if (!productList || productList.length === 0) {
+        console.warn("Product list is empty or undefined");
+        return null;
+      }
+
+      const totalProducts = productList.length;
+      return productList[
+        (currentIndex + indexOffset + totalProducts) % totalProducts
+      ];
+    },
+    [currentIndex]
+  );
+
+  // Keyboard navigation support
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (isAnimating) return;
+
+      switch (event.key) {
+        case "ArrowLeft":
+          event.preventDefault();
+          goToPrev();
+          break;
+        case "ArrowRight":
+          event.preventDefault();
+          goToNext();
+          break;
+        default:
+          break;
+      }
+    },
+    [isAnimating, goToPrev, goToNext]
+  );
 
   return {
+    // State
     currentIndex,
     isAnimating,
-    currentImageRef,
-    titleRef,
-    productSampleRef,
-    infoRef,
-    descriptionRef,
-    btnRef,
-    priceRef,
-    backgroundRef,
-    btnBackgroundRef1,
-    btnBackgroundRef2,
-    sizeRef1,
-    sizeRef2,
+
+    // Refs
+    ...refs,
+
+    // Utilities
     getButtonBackground,
     getBackgroundGradient,
+
+    // Navigation
     goToNext,
     goToPrev,
+    goToSlide,
     getProductAt,
-    totalProducts,
+
+    // Accessibility
+    handleKeyDown,
+    prefersReducedMotion,
   };
 };
