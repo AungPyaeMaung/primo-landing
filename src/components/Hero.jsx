@@ -72,9 +72,9 @@ const Hero = () => {
             transition: "none",
           }}
         />
-        <div className="absolute flex md:flex-col top-20 left-1/2 -translate-x-1/2 md:top-1/4 md:right-30 md:translate-x-full font-sans text-base gap-2.5">
+        <div className="absolute flex md:flex-col top-20 left-1/2 -translate-x-1/2 md:top-1/4 md:right-30 md:translate-x-full font-sans text-sm md:text-base gap-2.5">
           <div
-            className="flex-center size-14 rounded-full text-black cursor-pointer"
+            className="flex-center size-12 md:size-14 rounded-full text-black cursor-pointer"
             style={{
               background: "white",
               transition: "none",
@@ -84,7 +84,7 @@ const Hero = () => {
           </div>
           <div
             ref={sizeRef1}
-            className="flex-center size-14 rounded-full text-white cursor-pointer"
+            className="flex-center size-12 md:size-14 rounded-full text-white cursor-pointer"
             style={{
               background: getButtonBackground(currentProduct.bgColor),
               transition: "none",
@@ -94,7 +94,7 @@ const Hero = () => {
           </div>
           <div
             ref={sizeRef2}
-            className="flex-center size-14 rounded-full text-white cursor-pointer"
+            className="flex-center size-12 md:size-14 rounded-full text-white cursor-pointer"
             style={{
               background: getButtonBackground(currentProduct.bgColor),
               transition: "none",
