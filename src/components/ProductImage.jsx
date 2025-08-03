@@ -17,7 +17,10 @@ const ProductImage = ({ currentProduct, currentImageRef }) => {
   }, [currentProduct.image]);
 
   return (
-    <div id="brand" className="relative col-center mx-5 mt-10 md:-mt-10">
+    <div
+      id="brand"
+      className="relative col-center mx-5 mt-10 md:-mt-10 bg-red-500"
+    >
       <div className="inset-0 size-[60vh] md:size-[52vw] z-10 relative">
         {/* Loading placeholder */}
         {!imageLoaded && !imageError && (
@@ -59,7 +62,7 @@ const ProductImage = ({ currentProduct, currentImageRef }) => {
         alt="logo"
         width="200"
         height="50"
-        className="absolute left-1/2 -translate-x-1/2 w-[70vw] max-w-lg md:w-[75vw] md:max-w-3xl h-auto"
+        className="absolute top-1/2 -translate-y-1/2 left-0 w-[70vw] max-w-lg md:w-[75vw] md:max-w-3xl h-auto"
         loading="eager"
         decoding="sync"
       />

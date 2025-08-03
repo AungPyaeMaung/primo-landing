@@ -1,4 +1,4 @@
-// components/Hero.jsx - Improved version
+// components/Hero.jsx - Enhanced with Service Worker
 "use client";
 
 import { Helmet } from "react-helmet-async";
@@ -6,6 +6,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useProductCarousel } from "../hooks/useProductCarousel";
 import { useInitialAnimations } from "../hooks/useInitialAnimations";
 import { useImagePreloader } from "../hooks/useImagePreloader";
+import { useServiceWorker } from "../hooks/useServiceWorker";
 import { productList } from "../../constants";
 import Header from "./Header";
 import ProductImage from "./ProductImage";
@@ -15,25 +16,72 @@ import NavigationControls from "./NavigationControls";
 const Hero = () => {
   const [isReady, setIsReady] = useState(false);
 
-  // Extract all image sources that need preloading
-  const imageSources = useMemo(() => {
-    const sources = [];
+  // Service Worker integration
+  const { isServiceWorkerReady, preloadImages, isControlled } =
+    useServiceWorker();
+
+  // Organize images by priority
+  const { allImageSources, criticalImages, nextImages } = useMemo(() => {
+    const critical = [];
+    const next = [];
+    const all = [];
+
+    // Critical: First product + essential UI
+    if (productList[0]) {
+      critical.push(
+        productList[0].image,
+        productList[0].firstSampleImgPath,
+        productList[0].secondSampleImgPath
+      );
+    }
+
+    // Next: Second and third products for navigation
+    if (productList[1]) {
+      next.push(
+        productList[1].image,
+        productList[1].firstSampleImgPath,
+        productList[1].secondSampleImgPath
+      );
+    }
+    if (productList[2]) {
+      next.push(
+        productList[2].image,
+        productList[2].firstSampleImgPath,
+        productList[2].secondSampleImgPath
+      );
+    }
+
+    // Essential UI images
+    critical.push("/images/logo.svg", "/images/arrowleft.svg");
+
+    // All product images
     productList.forEach((product) => {
-      sources.push(product.image);
-      sources.push(product.firstSampleImgPath);
-      sources.push(product.secondSampleImgPath);
+      all.push(
+        product.image,
+        product.firstSampleImgPath,
+        product.secondSampleImgPath
+      );
     });
-    // Add other critical images
-    sources.push("/images/logo.svg");
-    sources.push("/images/profile.svg");
-    sources.push("/images/remove.svg");
-    sources.push("/images/arrowleft.svg");
-    sources.push("/images/minus.svg");
-    sources.push("/images/plus.svg");
-    return sources;
+
+    // All UI images
+    all.push(
+      "/images/logo.svg",
+      "/images/profile.svg",
+      "/images/remove.svg",
+      "/images/arrowleft.svg",
+      "/images/minus.svg",
+      "/images/plus.svg"
+    );
+
+    return {
+      allImageSources: all,
+      criticalImages: critical,
+      nextImages: next,
+    };
   }, []);
 
-  const { allImagesLoaded, loadingProgress } = useImagePreloader(imageSources);
+  const { shouldShowLoading, allImagesLoaded, loadingProgress, isImageCached } =
+    useImagePreloader(allImageSources);
 
   const {
     isAnimating,
@@ -56,31 +104,85 @@ const Hero = () => {
     getProductAt,
   } = useProductCarousel();
 
-  // Only initialize animations after images are loaded
-  useInitialAnimations(currentImageRef, titleRef, allImagesLoaded);
-
   const currentProduct = getProductAt(0);
 
-  // Wait for images to load before showing content
+  // Preload images via service worker when ready
   useEffect(() => {
-    if (allImagesLoaded && currentProduct) {
-      // Small delay to ensure DOM is fully ready
-      const timer = setTimeout(() => {
-        setIsReady(true);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [allImagesLoaded, currentProduct]);
+    if (isServiceWorkerReady && !allImagesLoaded) {
+      // First preload critical images
+      preloadImages(criticalImages);
 
-  // Loading state
-  if (!isReady) {
+      // Then preload next navigation images after a short delay
+      setTimeout(() => {
+        preloadImages(nextImages);
+      }, 1000);
+
+      // Finally preload all remaining images
+      setTimeout(() => {
+        const remainingImages = allImageSources.filter(
+          (img) => !criticalImages.includes(img) && !nextImages.includes(img)
+        );
+        preloadImages(remainingImages);
+      }, 3000);
+    }
+  }, [
+    isServiceWorkerReady,
+    allImagesLoaded,
+    preloadImages,
+    criticalImages,
+    nextImages,
+    allImageSources,
+  ]);
+
+  // Show content immediately if loading is not needed
+  useEffect(() => {
+    if (!shouldShowLoading && currentProduct) {
+      // Very short delay to ensure DOM is ready
+      const timer = setTimeout(() => setIsReady(true), 50);
+      return () => clearTimeout(timer);
+    } else if (!shouldShowLoading) {
+      setIsReady(true);
+    }
+  }, [shouldShowLoading, currentProduct]);
+
+  // Initialize animations when ready
+  useInitialAnimations(currentImageRef, titleRef, isReady);
+
+  // Enhanced loading screen with service worker status
+  if (shouldShowLoading && !isReady) {
     return (
-      <div className="min-h-[100dvh] w-full flex flex-col items-center justify-center bg-milk">
-        <div className="text-center">
-          <div className="w-32 h-32 border-4 border-caramel-lite border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-dark-brown font-sans">
-            Loading... {Math.round(loadingProgress)}%
+      <div className="min-h-[100dvh] w-full flex flex-col items-center justify-center bg-gradient-to-br from-milk to-light-brown/20">
+        <div className="text-center max-w-sm mx-auto px-6">
+          {/* Loading indicator */}
+          <div className="relative mb-4">
+            <div className="w-16 h-16 border-3 border-dark-brown/20 border-t-dark-brown rounded-full animate-spin mx-auto"></div>
+            {isServiceWorkerReady && (
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+            )}
+          </div>
+
+          <h2 className="text-lg font-sans font-medium text-dark-brown mb-2">
+            PRIMO
+          </h2>
+
+          <p className="text-sm text-dark-brown/70 mb-3">
+            {isControlled ? "Loading from cache..." : "Preparing experience..."}
           </p>
+
+          <div className="w-32 bg-dark-brown/10 rounded-full h-1 mx-auto">
+            <div
+              className="bg-dark-brown h-1 rounded-full transition-all duration-500"
+              style={{ width: `${loadingProgress}%` }}
+            ></div>
+          </div>
+
+          {/* Service Worker status indicator */}
+          {/* {process.env.NODE_ENV === 'development' && (
+            <div className="mt-3 text-xs text-dark-brown/50">
+              SW: {isServiceWorkerReady ? '✓' : '⏳'} | 
+              Controlled: {isControlled ? '✓' : '✗'}
+            </div>
+          )} */}
         </div>
       </div>
     );
@@ -94,16 +196,37 @@ const Hero = () => {
           name="description"
           content="Sip into something refreshing with PRIMO's signature drinks. Explore bold flavours, icy cold beverages, and exciting promotions in our showcase app."
         />
+
         {/* Preload critical images */}
-        {imageSources.slice(0, 6).map((src, index) => (
+        {criticalImages.map((src, index) => (
           <link
             key={index}
             rel="preload"
             as="image"
             href={src}
             type={src.endsWith(".svg") ? "image/svg+xml" : "image/webp"}
+            crossOrigin="anonymous"
           />
         ))}
+
+        {/* Prefetch next navigation images */}
+        {nextImages.map((src, index) => (
+          <link
+            key={`prefetch-${index}`}
+            rel="prefetch"
+            href={src}
+            as="image"
+            type={src.endsWith(".svg") ? "image/svg+xml" : "image/webp"}
+          />
+        ))}
+
+        {/* DNS optimization */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin=""
+        />
       </Helmet>
 
       <div className="min-h-[100dvh] w-full flex flex-col items-center justify-start relative overflow-hidden">
@@ -159,6 +282,7 @@ const Hero = () => {
           currentProduct={currentProduct}
           currentImageRef={currentImageRef}
           isReady={isReady}
+          isImageCached={isImageCached}
         />
 
         <div className="md:absolute md:bottom-20 flex flex-col-reverse justify-center items-center md:flex-row md:justify-between w-full z-10 px-10 md:px-20 gap-5 text-white">
@@ -184,6 +308,16 @@ const Hero = () => {
             isAnimating={isAnimating}
           />
         </div>
+
+        {/* Multi-level loading indicators */}
+        {!allImagesLoaded && isReady && (
+          <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2">
+            <div className="w-2 h-2 bg-white/50 rounded-full animate-pulse"></div>
+            {isServiceWorkerReady && (
+              <div className="w-1 h-1 bg-green-400 rounded-full"></div>
+            )}
+          </div>
+        )}
       </div>
     </>
   );
