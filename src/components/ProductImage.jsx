@@ -52,7 +52,6 @@ const ProductImage = ({ currentProduct, currentImageRef }) => {
           decoding="sync" // Synchronous decoding for immediate display
         />
       </div>
-
       {/* Logo with proper loading */}
       <img
         id="main-logo"
