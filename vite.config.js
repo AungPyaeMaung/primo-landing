@@ -11,12 +11,16 @@ export default defineConfig({
         manualChunks: {
           vendor: ["react", "react-dom"],
           gsap: ["gsap"],
+          animations: ["@gsap/react"],
         },
       },
     },
+    // Optimize assets
+    assetsInlineLimit: 0, // Don't inline images
   },
+  // Add image optimization
+  assetsInclude: ["**/*.webp", "**/*.svg"],
   server: {
-    // For better dev performance
     hmr: {
       overlay: false,
     },
