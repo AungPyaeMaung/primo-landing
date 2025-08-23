@@ -1,5 +1,5 @@
 // Custom hook for background utilities
-"use client";
+
 import { useCallback } from "react";
 import { bgColorMap, gradientMap } from "../../constants";
 

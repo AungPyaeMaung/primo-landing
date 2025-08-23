@@ -1,4 +1,3 @@
-"use client";
 import { useRef } from "react";
 
 // Custom hook for managing carousel refs

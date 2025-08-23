@@ -1,5 +1,4 @@
 // components/Hero.jsx - Improved version
-"use client";
 
 import { Helmet } from "react-helmet-async";
 import { useState, useEffect, useMemo } from "react";

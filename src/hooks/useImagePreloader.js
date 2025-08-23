@@ -1,5 +1,5 @@
 // hooks/useImagePreloader.js
-"use client";
+
 import { useState, useEffect, useCallback } from "react";
 
 export const useImagePreloader = (imageSources = []) => {
