@@ -1,4 +1,5 @@
 // hooks/useInitialAnimations.js - Improved version
+"use client";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
