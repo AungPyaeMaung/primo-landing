@@ -56,10 +56,10 @@ const ProductImage = ({ currentProduct, currentImageRef }) => {
       <img
         id="main-logo"
         src="/images/logo.svg"
-        alt="logo"
+        alt="hero-logo"
         width="200"
         height="50"
-        className="absolute left-1/2 -translate-x-1/2 w-[70vw] max-w-lg md:w-[75vw] md:max-w-3xl h-auto"
+        className="absolute -translate-x-1/2 w-[70vw] max-w-lg md:w-[75vw] md:max-w-3xl h-auto"
         loading="eager"
         decoding="sync"
       />

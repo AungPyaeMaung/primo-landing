@@ -1,4 +1,4 @@
-// hooks/useInitialAnimations.js - Improved version
+// hooks/useInitialAnimations.js - Fixed version
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -11,38 +11,43 @@ export const useInitialAnimations = (
     // Only run animations after images are loaded
     if (!imagesLoaded) return;
 
-    // Create a master timeline
-    const tl = gsap.timeline();
+    // Wait a bit longer to ensure DOM is fully ready
+    gsap.delayedCall(0.3, () => {
+      // Create a master timeline
+      const tl = gsap.timeline();
 
-    // Set initial states to prevent flashing
-    gsap.set("#main-logo", { xPercent: 200, opacity: 0 });
-    gsap.set(currentImageRef.current, { opacity: 0, yPercent: -200 });
-    gsap.set(titleRef.current, { opacity: 0, yPercent: 30 });
-    gsap.set("#basic-info", { yPercent: 70, opacity: 0 });
-    gsap.set("#price", { yPercent: 50, opacity: 0 });
-    gsap.set("#description", { yPercent: 30, opacity: 0 });
-    gsap.set("#order-btn", { yPercent: 50, opacity: 0 });
-    gsap.set("#name", { yPercent: 50, opacity: 0 });
-    gsap.set("#new-price", { yPercent: 50, opacity: 0 });
-    gsap.set("#old-price", { yPercent: 50, opacity: 0 });
-    gsap.set("#arrowleft", { yPercent: 20, opacity: 0 });
-    gsap.set("#arrowright", { yPercent: 20, opacity: 0 });
-    gsap.set("#sample-1", { yPercent: 20, opacity: 0 });
-    gsap.set("#sample-2", { yPercent: 20, opacity: 0 });
-    gsap.set("#counter", { yPercent: 50, opacity: 0 });
+      // Helper function to safely animate elements
+      const safeAnimate = (selector, fromProps, toProps, position = null) => {
+        const element =
+          typeof selector === "string"
+            ? document.querySelector(selector)
+            : selector;
+        if (!element) {
+          console.warn(`Element not found: ${selector}`);
+          return;
+        }
 
-    // Wait for next frame to ensure DOM is ready
-    gsap.delayedCall(0.1, () => {
-      // Logo animation
-      tl.to("#main-logo", {
-        xPercent: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power1.out",
-      });
+        // Set initial state
+        gsap.set(element, fromProps);
 
-      // Main image animation
+        // Add to timeline
+        if (position !== null) {
+          tl.to(element, toProps, position);
+        } else {
+          tl.to(element, toProps);
+        }
+      };
+
+      // Logo animation - use more specific selector
+      safeAnimate(
+        'img[alt="hero-logo"]',
+        { xPercent: 200, opacity: 0 },
+        { xPercent: 0, opacity: 1, duration: 0.8, ease: "power1.out" }
+      );
+
+      // Main image animation - use ref directly
       if (currentImageRef.current) {
+        gsap.set(currentImageRef.current, { opacity: 0, yPercent: -200 });
         tl.to(
           currentImageRef.current,
           {
@@ -55,8 +60,9 @@ export const useInitialAnimations = (
         );
       }
 
-      // Title animation
+      // Title animation - use ref directly
       if (titleRef.current) {
+        gsap.set(titleRef.current, { opacity: 0, yPercent: 30 });
         tl.to(
           titleRef.current,
           {
@@ -69,147 +75,99 @@ export const useInitialAnimations = (
         );
       }
 
-      // Info section animations
-      tl.to(
-        "#basic-info",
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power1.out",
-        },
+      // Info section animations - use more specific selectors
+      safeAnimate(
+        '[id="basic-info"]',
+        { yPercent: 70, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, ease: "power1.out" },
         "-=0.8"
-      )
+      );
 
-        .to(
-          "#price",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power1.out",
-          },
-          "-=0.9"
-        )
+      safeAnimate(
+        '[id="price"]',
+        { yPercent: 50, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, ease: "power1.out" },
+        "-=0.9"
+      );
 
-        .to(
-          "#description",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power1.out",
-          },
-          "-=0.8"
-        )
+      safeAnimate(
+        '[id="description"]',
+        { yPercent: 30, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, ease: "power1.out" },
+        "-=0.8"
+      );
 
-        .to(
-          "#order-btn",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power1.out",
-          },
-          "-=0.8"
-        )
+      safeAnimate(
+        '[id="order-btn"]',
+        { yPercent: 50, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 1, ease: "power1.out" },
+        "-=0.8"
+      );
 
-        // Stagger info elements
-        .to(
-          "#name",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power1.out",
-          },
-          "-=0.9"
-        )
+      // Individual info elements
+      safeAnimate(
+        '[id="name"]',
+        { yPercent: 50, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.5, ease: "power1.out" },
+        "-=0.9"
+      );
 
-        .to(
-          "#new-price",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power1.out",
-          },
-          "-=0.8"
-        )
+      safeAnimate(
+        '[id="new-price"]',
+        { yPercent: 50, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.5, ease: "power1.out" },
+        "-=0.8"
+      );
 
-        .to(
-          "#old-price",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power1.out",
-          },
-          "-=0.7"
-        )
+      safeAnimate(
+        '[id="old-price"]',
+        { yPercent: 50, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.5, ease: "power1.out" },
+        "-=0.7"
+      );
 
-        // Navigation controls
-        .to(
-          "#arrowleft",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power1.out",
-          },
-          "-=0.9"
-        )
+      // Navigation controls
+      safeAnimate(
+        '[id="arrowleft"]',
+        { yPercent: 20, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.5, ease: "power1.out" },
+        "-=0.9"
+      );
 
-        .to(
-          "#arrowright",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power1.out",
-          },
-          "-=0.7"
-        )
+      safeAnimate(
+        '[id="arrowright"]',
+        { yPercent: 20, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.5, ease: "power1.out" },
+        "-=0.7"
+      );
 
-        // Sample images
-        .to(
-          "#sample-1",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.3,
-            ease: "power1.out",
-          },
-          "-=0.8"
-        )
+      // Sample images
+      safeAnimate(
+        '[id="sample-1"]',
+        { yPercent: 20, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.3, ease: "power1.out" },
+        "-=0.8"
+      );
 
-        .to(
-          "#sample-2",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.3,
-            ease: "power1.out",
-          },
-          "-=0.7"
-        )
+      safeAnimate(
+        '[id="sample-2"]',
+        { yPercent: 20, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.3, ease: "power1.out" },
+        "-=0.7"
+      );
 
-        // Counter
-        .to(
-          "#counter",
-          {
-            yPercent: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power1.out",
-          },
-          "-=0.7"
-        );
+      // Counter
+      safeAnimate(
+        '[id="counter"]',
+        { yPercent: 50, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.5, ease: "power1.out" },
+        "-=0.7"
+      );
+
+      // Cleanup function
+      return () => {
+        tl.kill();
+      };
     });
-
-    // Cleanup function
-    return () => {
-      tl.kill();
-    };
-  }, [imagesLoaded]); // Add imagesLoaded as dependency
+  }, [imagesLoaded, currentImageRef, titleRef]); // Add refs as dependencies
 };
