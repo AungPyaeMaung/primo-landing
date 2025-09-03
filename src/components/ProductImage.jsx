@@ -53,7 +53,7 @@ const ProductImage = ({ currentProduct, currentImageRef }) => {
         />
       </div>
       {/* Logo with proper loading */}
-      {/* <img
+      <img
         id="main-logo"
         src="/images/logo.svg"
         alt="hero-logo"
@@ -62,7 +62,7 @@ const ProductImage = ({ currentProduct, currentImageRef }) => {
         className="absolute -translate-x-1/2 w-[70vw] max-w-lg md:w-[75vw] md:max-w-3xl h-auto"
         loading="eager"
         decoding="sync"
-      /> */}
+      />
     </div>
   );
 };
