@@ -59,7 +59,7 @@ const ProductImage = ({ currentProduct, currentImageRef }) => {
         alt="hero-logo"
         width="200"
         height="50"
-        className="absolute -translate-x-1/2 w-[70vw] max-w-lg md:w-[75vw] md:max-w-3xl h-auto"
+        className="absolute md:-translate-x-1/2 w-[70vw] max-w-lg md:w-[75vw] md:max-w-3xl h-auto"
         loading="eager"
         decoding="sync"
       />
